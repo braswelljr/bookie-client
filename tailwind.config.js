@@ -8,7 +8,7 @@ module.exports = {
     './layouts/**/*.vue',
     './pages/**/*.vue',
     './plugins/**/*.{js,ts}',
-    './nuxt.config.{js,ts}',
+    './nuxt.config.{js,ts}'
   ],
   darkMode: 'class',
   theme: {
@@ -17,13 +17,13 @@ module.exports = {
       xs: '375px',
       xsm: '425px',
       '3xl': '1920px',
-      ...defaultTheme.screens,
+      ...defaultTheme.screens
     },
     extend: {
       fontFamily: {
-        sans: ["'Euclid Circular B'", ...defaultTheme.fontFamily.sans],
+        sans: ["'Lexend'", ...defaultTheme.fontFamily.sans],
         serif: ["'Lobster'", ...defaultTheme.fontFamily.serif],
-        mono: ["'Jetbrains Mono'", ...defaultTheme.fontFamily.mono],
+        mono: ["'Jetbrains Mono'", ...defaultTheme.fontFamily.mono]
       },
       colors: {
         brown: {
@@ -37,38 +37,38 @@ module.exports = {
           200: '#c09072',
           100: '#c69b81',
           50: '#d9bcab',
-          20: '#F3E8E2',
-        },
+          20: '#F3E8E2'
+        }
       },
       animation: {
         spin: 'spin 1s linear infinite',
-        grow: 'grow 500ms linear 0ms infinite',
+        grow: 'grow 500ms linear 0ms infinite'
       },
       keyframes: {
         spin: {
           '0%': { transform: 'rotate(0deg)' },
-          '100%': { transform: 'rotate(360deg)' },
+          '100%': { transform: 'rotate(360deg)' }
         },
         grow: {
           '0%': { transform: 'scale(0)' },
-          '100%': { transform: 'scale(1)' },
+          '100%': { transform: 'scale(1)' }
         },
         move: {
           '0%': { translateX: '0' },
-          '100%': { translateX: '-100%' },
-        },
+          '100%': { translateX: '-100%' }
+        }
       },
       transitionProperty: {
         height: 'height',
         width: 'width',
         spacing: 'margin, padding',
         maxHeight: 'max-height',
-        maxWidth: 'max-width',
-      },
-    },
+        maxWidth: 'max-width'
+      }
+    }
   },
   variants: {
-    extend: {},
+    extend: {}
   },
   plugins: [
     require('@tailwindcss/aspect-ratio'),
@@ -79,6 +79,6 @@ module.exports = {
       addVariant('child', '& > *')
       addVariant('not-first', '& > *:not(:first-child)')
       addVariant('not-last', '& > *:not(:last-child)')
-    },
-  ],
+    }
+  ]
 }

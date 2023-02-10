@@ -12,24 +12,10 @@
   font-display: swap;
 }
 
-/* sen font */
+/* Lexend font */
 @font-face {
-  font-family: 'Sen';
-  src: url('/fonts/sen/sen.bold.otf');
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Sen';
-  src: url('/fonts/sen/sen.regular.otf');
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Sen';
-  src: url('/fonts/sen/sen.extrabold.otf');
+  font-family: 'Lexend';
+  src: url('/fonts/lexend.ttf');
   font-style: normal;
   font-display: swap;
 }

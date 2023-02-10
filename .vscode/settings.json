@@ -1,5 +1,5 @@
 {
-  "nuxt.isNuxtApp": true,
+  "nuxt.isNuxtApp": false,
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
