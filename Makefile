@@ -1,32 +1,32 @@
 .PHONY: dev
 dev:
 	@echo "Starting development server..."
-	pnpm dev
+	yarn dev
 
 .PHONY: build
 build:
 	@echo "Building for production..."
-	pnpm build
+	yarn build
 
 .PHONY: start
 start:
 	@echo "Starting production server..."
-	pnpm start
+	yarn start
 
 .PHONY: test
 test:
 	@echo "Running tests..."
-	pnpm test
+	yarn test
 
 .PHONY: lint
 lint:
 	@echo "Linting..."
-	pnpm lint
+	yarn lint
 
 .PHONY: lint-fix
 lint-fix:
 	@echo "Linting and fixing..."
-	pnpm lintfix
+	yarn lintfix
 
 .PHONY: clean
 clean:
