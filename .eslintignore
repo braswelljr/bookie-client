@@ -1,0 +1,9 @@
+# dependencies
+/node_modules/
+
+# next compiled
+/.nuxt/
+
+# Ignore artifacts:
+build
+coverage
