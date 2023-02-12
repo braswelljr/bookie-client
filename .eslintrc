@@ -1,0 +1,54 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "plugin:nuxt/recommended",
+    "plugin:vue/vue3-strongly-recommended",
+    "eslint:recommended",
+    "@nuxtjs/eslint-config-typescript",
+    "plugin:prettier/recommended",
+    "@vue/eslint-config-typescript",
+    "@vue/eslint-config-prettier"
+  ],
+  "parser": "vue-eslint-parser",
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser",
+    "sourceType": "module",
+    "ecmaVersion": "latest"
+  },
+  "settings": {
+    "vue": {
+      "version": "detect"
+    }
+  },
+  "plugins": ["vue", "@typescript-eslint", "prettier"],
+  "rules": {
+    "global-require": "off",
+    "no-unused-vars": "off",
+    // vue rules
+    "vue/no-unused-vars": "warn",
+    "vue/multi-word-component-names": 0,
+    "vue/operator-linebreak": 0,
+    "vue/first-attribute-linebreak": [
+      "warn",
+      {
+        "singleline": "ignore",
+        "multiline": "below"
+      }
+    ],
+    // typescript rules
+    "@typescript-eslint/no-empty-function": "off",
+    "prettier/prettier": [
+      "warn",
+      {},
+      {
+        "usePrettierrc": true,
+        "ignoreFiles": ["**/node_modules/**", "**/dist/**"]
+      }
+    ]
+  }
+}

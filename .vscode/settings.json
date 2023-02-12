@@ -1,24 +1,21 @@
 {
-  "nuxt.isNuxtApp": false,
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": true,
+    "source.fixAll.stylelint": true,
+    "source.Prettier": true
   },
+  "eslint.packageManager": "yarn",
   "editor.quickSuggestions": {
     "strings": true
   },
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact",
-    "vue"
-  ],
+  "eslint.validate": ["javascript", "typescript", "vue", "javascriptreact", "typescriptreact"],
   "tailwindCSS.emmetCompletions": true,
   "tailwindCSS.includeLanguages": {
     "javascript": "javascriptreact",
     "typescript": "typescriptreact",
     "vue": "vue"
   },
-  "tailwindCSS.colorDecorators": true
+  "tailwindCSS.colorDecorators": true,
+  "nuxt.isNuxtApp": false
 }

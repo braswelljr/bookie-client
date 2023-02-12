@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 const props = defineProps({
   error: {
     type: Object,
@@ -6,9 +6,9 @@ const props = defineProps({
   }
 })
 
-const message = $computed(() => String(props.error?.message || ''))
-const is404 = $computed(
-  () => props.error?.statusCode === 404 || message?.includes('404')
+const message = computed(() => String(props.error?.message || ''))
+const is404 = computed(
+  () => props.error?.statusCode === 404 || (message as unknown as string)?.includes('404')
 )
 const isDev = process.dev
 
@@ -22,8 +22,7 @@ const handleError = () => clearError({ redirect: '/' })
         {{ is404 ? 'This page could not be found' : 'An error occurred' }}
       </div>
       <div>
-        Looks like you've followed a broken link or entered a URL that doesn't
-        exist on this site.
+        Looks like you've followed a broken link or entered a URL that doesn't exist on this site.
       </div>
       <pre v-if="isDev">{{ error }}</pre>
       <button @click="handleError">Go Back</button>

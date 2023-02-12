@@ -5,5 +5,8 @@
 # Run lintfix before commit
 yarn lintfix
 
+# Run format before commit
+yarn format
+
 # Run lint-staged
 yarn lint-staged
