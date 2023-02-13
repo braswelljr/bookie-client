@@ -30,6 +30,7 @@
     "global-require": "off",
     "no-unused-vars": "off",
     // vue rules
+    "vue/comment-directive": "warn",
     "vue/no-unused-vars": "warn",
     "vue/multi-word-component-names": 0,
     "vue/operator-linebreak": 0,

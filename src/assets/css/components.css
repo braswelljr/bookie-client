@@ -1,0 +1,23 @@
+@layer components {
+  .gradient-text {
+    background: linear-gradient(90deg, #005eff 0%, #f6d365 40%, #fda085 20%, #7740bf 100%);
+    background-size: 400% 400%;
+    background-clip: text;
+    color: transparent;
+    animation: gradient 10s cubic-bezier(0.165, 0.84, 0.44, 1) 5s infinite alternate both;
+  }
+
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+}

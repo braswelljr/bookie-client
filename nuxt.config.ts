@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'url'
 
 export default defineNuxtConfig({
+  srcDir: 'src',
   app: {
     head: {
       htmlAttrs: {
@@ -23,12 +24,12 @@ export default defineNuxtConfig({
     // '@nuxtjs/i18n',
     '@nuxt/image-edge',
     '@pinia/nuxt',
+    '@nuxtjs/color-mode',
     '@nuxtjs/device',
-    '@vueuse/nuxt',
     '@nuxtjs/tailwindcss',
+    '@vueuse/nuxt',
     'nuxt-headlessui',
-    'nuxt-icons',
-    '@nuxtjs/color-mode'
+    'nuxt-icons'
   ],
   alias: {
     images: fileURLToPath(new URL('./assets/images', import.meta.url)),
@@ -36,10 +37,6 @@ export default defineNuxtConfig({
     style: fileURLToPath(new URL('./assets/style', import.meta.url)),
     data: fileURLToPath(new URL('./assets/other/data', import.meta.url))
   },
-  image: {
-    provider: 'proxy'
-  },
-  headlessui: {},
   colorMode: {
     preference: 'system', // default value of $colorMode.preference
     fallback: 'light', // fallback value if not system preference found
@@ -47,6 +44,17 @@ export default defineNuxtConfig({
     classSuffix: '',
     storageKey: '__COLOR_THEME__'
   },
+  nuxtIcons: {
+    size: '24px', // default <Icon> size applied
+    class: 'icon', // default <Icon> class applied
+    aliases: {
+      nuxt: 'logos:nuxt-icon'
+    }
+  },
+  image: {
+    provider: 'proxy'
+  },
+  headlessui: {},
   postcss: {
     plugins: {
       'postcss-import': {},
