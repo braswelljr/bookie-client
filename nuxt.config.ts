@@ -18,6 +18,10 @@ export default defineNuxtConfig({
           href: '/task.png'
         }
       ]
+    },
+    pageTransition: {
+      name: 'bounce',
+      mode: 'out-in' // default
     }
   },
   modules: [

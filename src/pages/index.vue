@@ -23,24 +23,6 @@ const points = [
 
 <template>
   <main class="relative min-h-screen w-full bg-zinc-100 dark:bg-zinc-900">
-    <!-- Back Button -->
-    <NuxtLink to="/" class="fixed top-4 left-4 bg-blue-500">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-auto"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M10 19l-7-7m0 0l7-7m-7 7h18"
-        />
-      </svg>
-      <span class="">Back</span>
-    </NuxtLink>
     <!-- Main -->
     <div class="min-h-[90vh] pt-10 sm:pt-14 md:pt-20">
       <div class="mx-auto w-full max-w-3xl space-y-14 max-lg:px-5 max-sm:space-y-10">
