@@ -1,20 +1,17 @@
 <script setup lang="ts">
-const props = defineProps({
-  class: {
-    type: String,
-    default: ''
-  }
-})
-
-const className = computed(() => props.class)
+defineProps<{
+  class?: string
+}>()
 </script>
 
 <template>
   <svg
-    viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
-    fill="currentColor"
-    :class="className"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke-width="1.5"
+    stroke="currentColor"
+    :class="$props.class"
   >
     <!-- gradient for  -->
     <defs>

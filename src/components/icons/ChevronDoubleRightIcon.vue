@@ -1,12 +1,7 @@
 <script setup lang="ts">
-const props = defineProps({
-  class: {
-    type: String,
-    default: ''
-  }
-})
-
-const className = computed(() => props.class)
+defineProps<{
+  class?: string
+}>()
 </script>
 
 <template>
@@ -16,7 +11,7 @@ const className = computed(() => props.class)
     viewBox="0 0 24 24"
     stroke-width="1.5"
     stroke="currentColor"
-    :class="className"
+    :class="$props.class"
   >
     <path
       stroke-linecap="round"

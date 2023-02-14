@@ -1,5 +1,29 @@
 <script setup lang="ts">
+import { useForm } from 'vue-hooks-form'
 import ChevronLeftIcon from '@/components/icons/ChevronLeftIcon.vue'
+import Input from '@/components/Input.vue'
+
+const { useField, handleSubmit, errors } = useForm()
+
+const email = useField('email', {
+  rule: {
+    required: true,
+    pattern: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+    message: 'Invalid email address'
+  }
+})
+
+const password = useField('password', {
+  rule: {
+    required: true,
+    // pattern: /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9]).{8,}$/,
+    min: 8,
+    message: 'Enter a valid Password'
+  }
+})
+
+// eslint-disable-next-line no-console
+const onSubmit = handleSubmit(values => console.log(values))
 </script>
 
 <template>
@@ -13,29 +37,63 @@ import ChevronLeftIcon from '@/components/icons/ChevronLeftIcon.vue'
       <span class="max-sm:hidden">Back</span>
     </NuxtLink>
     <!-- Main -->
-    <div class="flex min-h-screen flex-col items-center max-sm:pt-20 sm:justify-center">
-      <div class="flex w-auto items-center justify-center">
+    <div class="relative min-h-screen">
+      <div class="absolute top-0 left-0 h-auto w-full">
         <!-- header -->
-        <header class="">
+        <header class="w-auto space-y-5">
           <h1 class="mx-auto w-auto">
-            <span class="sr-only"> Bookie </span>
+            <span class="sr-only">Bookie</span>
             <img
               class="mx-auto h-16 w-auto max-sm:h-12"
               src="@/assets/images/task.png"
               alt="task icon"
             />
           </h1>
+          <h2 class="mx-auto text-center text-2xl font-bold uppercase tracking-wider">Login</h2>
         </header>
         <!-- body -->
-        <div class="">
-          <form onsubmit="">
-            <!-- email -->
-            <div class=""></div>
-            <!-- password -->
-            <div class=""></div>
-            <!-- submit -->
-          </form>
-        </div>
+        <form
+          id="login-form"
+          action="#"
+          method="post"
+          class="mt-14 space-y-10 md:mx-auto md:w-2/3 lg:w-1/2 xl:w-1/3"
+          @submit="onSubmit"
+        >
+          <!-- email -->
+          <Input
+            :id="`email`"
+            :errorfield="errors.email"
+            :required="true"
+            :header="`Email`"
+            :class="`mx-5 lg:mx-0`"
+            :errormessage="`Enter a valid Email Address`"
+            :placeholder="`Email`"
+            :fields="email"
+          />
+          <!-- password -->
+          <Input
+            :id="`password`"
+            :type="`password`"
+            :errorfield="password.error"
+            :required="true"
+            :header="`Password`"
+            :class="`mx-5 lg:mx-0`"
+            :errormessage="`Enter a valid Password`"
+            :placeholder="`Password`"
+            :fields="password"
+          />
+          <!-- submit -->
+          <div className="mx-5 space-y-5 lg:mx-0">
+            <div className="">
+              <button
+                type="submit"
+                class="w-full rounded bg-blue-600 p-2 font-semibold uppercase text-white transition-transform hover:-translate-y-[2px] focus:outline-none focus:ring-0 dark:bg-blue-600"
+              >
+                Login
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   </main>

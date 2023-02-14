@@ -34,6 +34,7 @@
     "vue/no-unused-vars": "warn",
     "vue/multi-word-component-names": 0,
     "vue/operator-linebreak": 0,
+    "vue/require-default-prop": 0,
     "vue/first-attribute-linebreak": [
       "warn",
       {
