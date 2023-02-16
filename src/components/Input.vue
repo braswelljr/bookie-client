@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { FieldNode } from 'vue-hooks-form/dist/src/utils'
 import EyeIcon from '@/components/icons/EyeIcon.vue'
 import EyeClosedIcon from '@/components/icons/EyeClosedIcon.vue'
 
@@ -13,16 +12,9 @@ const props = withDefaults(
     placeholder?: Slottable | string
     header?: string | Slottable
     required?: boolean
-    fields?: {
-      ref: (nodeRef: FieldNode) => void
-      value: any
-      error:
-        | {
-            message: string
-            field: string
-          }[]
-        | undefined
-      validate: () => Promise<any>
+    value?: any
+    error?: {
+      message: string | Slottable
     }
   }>(),
   {
@@ -33,31 +25,40 @@ const props = withDefaults(
   }
 )
 
-const showPassword = ref(false)
+defineEmits<{
+  (e: 'change', id: number): void
+  (e: 'update:value', value: string): void
+}>()
 
-const header = props.header || props.placeholder
+const showPassword = $ref<boolean>(false)
+
+const header = $computed(() => props.header || props.placeholder)
+
+// computed input value
+const inputValue = $computed(() => props?.value)
 </script>
 
 <template>
   <div :class="`${$props.class} relative`">
-    <div className="relative">
+    <div className="relative w-full">
       <!-- input -->
       <Component
         :is="as"
         :id="id"
-        :ref="fields?.ref"
-        :value="fields?.value"
+        :value="inputValue"
         :type="type === 'password' ? (showPassword ? 'text' : 'password') : type"
         :placeholder="placeholder"
         auto-complete="off"
         autocomplete="off"
         aria-autocomplete="list"
+        v-bind="$attrs"
         :rows="rows"
         :class="`peer w-full rounded-sm border bg-white p-2 text-zinc-900 placeholder-transparent focus:outline-none focus:outline-0 focus:ring-0 dark:bg-zinc-900 dark:text-white ${
-          fields?.error
+          error
             ? `border-red-500/50 focus:border-red-600/50 dark:border-red-500/50 dark:focus:border-red-500/50`
             : `border-blue-700/50 dark:border-zinc-900/50`
         }`"
+        @input="(e: Event) => $emit('update:value', (e.target as HTMLInputElement).value)"
       />
       <!-- labels -->
       <label
@@ -75,8 +76,9 @@ const header = props.header || props.placeholder
       <!-- show password -->
       <button
         v-if="type === 'password'"
-        class="absolute inset-y-0 right-2 w-6 cursor-pointer space-x-2 overflow-hidden focus:outline-none"
-        @click="showPassword = !showPassword"
+        type="button"
+        class="absolute inset-y-0 right-2 z-[1] w-6 cursor-pointer space-x-2 overflow-hidden focus:outline-none"
+        @click="() => (showPassword = !showPassword)"
       >
         <EyeIcon
           :class="`block h-auto w-4 translate-y-2 transition-all ${
@@ -91,12 +93,8 @@ const header = props.header || props.placeholder
       </button>
     </div>
     <!-- error -->
-    <div v-if="fields?.error" class="p-1 text-[13px] font-light text-red-500">
-      {{
-        fields?.error && fields.error[0].message
-          ? fields.error[0].message
-          : 'Enter your ' + placeholder
-      }}
+    <div v-if="error" class="p-1 text-[13px] font-light text-red-500">
+      {{ error && error.message ? error.message : 'Enter your ' + placeholder }}
     </div>
   </div>
 </template>

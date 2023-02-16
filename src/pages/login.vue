@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { useForm } from 'vue-hooks-form'
 import ChevronLeftIcon from '@/components/icons/ChevronLeftIcon.vue'
+import SpinnerIcon from '@/components/icons/SpinnerIcon.vue'
 import Input from '@/components/Input.vue'
+
+const loading = $ref(false)
 
 const { useField, handleSubmit, errors } = useForm()
 
@@ -22,12 +25,14 @@ const password = useField('password', {
   }
 })
 
-// eslint-disable-next-line no-console
-const onSubmit = handleSubmit(values => console.log(values))
+const onSubmit = handleSubmit(data => {
+  // eslint-disable-next-line no-console
+  console.log(data)
+})
 </script>
 
 <template>
-  <main class="mx-auto w-full max-w-3xl max-lg:px-5">
+  <main class="w-full">
     <!-- Back Button -->
     <NuxtLink
       to="/"
@@ -37,8 +42,8 @@ const onSubmit = handleSubmit(values => console.log(values))
       <span class="max-sm:hidden">Back</span>
     </NuxtLink>
     <!-- Main -->
-    <div class="relative min-h-screen">
-      <div class="absolute top-0 left-0 h-auto w-full">
+    <div class="relative min-h-screen w-full">
+      <div class="h-auto w-full translate-y-1/3">
         <!-- header -->
         <header class="w-auto space-y-5">
           <h1 class="mx-auto w-auto">
@@ -56,25 +61,25 @@ const onSubmit = handleSubmit(values => console.log(values))
           id="login-form"
           action="#"
           method="post"
-          class="mt-14 space-y-10 md:mx-auto md:w-2/3 lg:w-1/2 xl:w-1/3"
+          class="mt-14 space-y-10 md:mx-auto md:w-2/3 lg:w-1/2 xl:w-2/5"
           @submit="onSubmit"
         >
           <!-- email -->
           <Input
             :id="`email`"
-            :errorfield="errors.email"
+            :error="email.error ? email.error[0] : undefined"
             :required="true"
             :header="`Email`"
             :class="`mx-5 lg:mx-0`"
             :errormessage="`Enter a valid Email Address`"
             :placeholder="`Email`"
-            :fields="email"
+            :value="email"
           />
           <!-- password -->
           <Input
             :id="`password`"
             :type="`password`"
-            :errorfield="password.error"
+            :error="password.error ? password.error[0] : undefined"
             :required="true"
             :header="`Password`"
             :class="`mx-5 lg:mx-0`"
@@ -83,15 +88,14 @@ const onSubmit = handleSubmit(values => console.log(values))
             :fields="password"
           />
           <!-- submit -->
-          <div className="mx-5 space-y-5 lg:mx-0">
-            <div className="">
-              <button
-                type="submit"
-                class="w-full rounded bg-blue-600 p-2 font-semibold uppercase text-white transition-transform hover:-translate-y-[2px] focus:outline-none focus:ring-0 dark:bg-blue-600"
-              >
-                Login
-              </button>
-            </div>
+          <div className="mx-5 lg:mx-0">
+            <button
+              type="submit"
+              class="w-full rounded bg-blue-600 p-2 font-semibold uppercase text-white transition-transform hover:-translate-y-[2px] focus:outline-none focus:ring-0 dark:bg-blue-600"
+            >
+              <SpinnerIcon v-if="loading" class="h-5 w-auto" />
+              <span v-else>Login</span>
+            </button>
           </div>
         </form>
       </div>
