@@ -29,6 +29,7 @@
   "rules": {
     "global-require": "off",
     "no-unused-vars": "off",
+    "no-console": "off",
     // vue rules
     "vue/comment-directive": "warn",
     "vue/no-unused-vars": "warn",

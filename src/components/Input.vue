@@ -12,10 +12,10 @@ const props = withDefaults(
     placeholder?: Slottable | string
     header?: string | Slottable
     required?: boolean
-    value?: any
+    value: any
     error?: {
-      message: string | Slottable
-    }
+      message: string
+    }[]
   }>(),
   {
     as: 'input',
@@ -34,8 +34,14 @@ const showPassword = $ref<boolean>(false)
 
 const header = $computed(() => props.header || props.placeholder)
 
-// computed input value
-const inputValue = $computed(() => props?.value)
+// computed error
+const errors = $computed(() => props.error)
+
+// value
+const value = $computed(() => props.value)
+
+// log errors
+console.log(value)
 </script>
 
 <template>
@@ -45,7 +51,7 @@ const inputValue = $computed(() => props?.value)
       <Component
         :is="as"
         :id="id"
-        :value="inputValue"
+        v-model="value"
         :type="type === 'password' ? (showPassword ? 'text' : 'password') : type"
         :placeholder="placeholder"
         auto-complete="off"
@@ -93,8 +99,11 @@ const inputValue = $computed(() => props?.value)
       </button>
     </div>
     <!-- error -->
-    <div v-if="error" class="p-1 text-[13px] font-light text-red-500">
-      {{ error && error.message ? error.message : 'Enter your ' + placeholder }}
+    <div v-if="errors" class="p-1 text-[13px] font-light text-red-500">
+      <ul v-if="errors && Array.isArray(errors)" class="list-inside list-disc">
+        <li v-for="e in errors" :key="e.message">{{ e.message }}</li>
+      </ul>
+      <span v-else>{{ 'Enter your ' + placeholder }} </span>
     </div>
   </div>
 </template>
