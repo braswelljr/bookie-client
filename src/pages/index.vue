@@ -55,7 +55,7 @@ const points = [
           <div class="my-6">
             <NuxtLink
               to="/login"
-              class="bg-blue-600 py-2.5 px-5 text-center text-neutral-900 transition duration-100 ease-in-out hover:bg-blue-700 dark:text-white"
+              class="bg-blue-600 px-5 py-2.5 text-center text-neutral-900 transition duration-100 ease-in-out hover:bg-blue-700 dark:text-white"
             >
               Get Started
             </NuxtLink>

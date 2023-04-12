@@ -6,118 +6,187 @@ import Input from '@/components/Input.vue'
 const loading = $ref(false)
 
 // form state
-const firstname = $ref('')
-const lastname = $ref('')
-const othernames = $ref('')
-const username = $ref('')
-const dateOfBirth = $ref('')
-const email = $ref('')
-const phone = $ref('')
-const address = $ref('')
-const city = $ref('')
-const country = $ref('')
-const password = $ref('')
-const confirmPassword = $ref('')
-
-// validation
-const errors = $ref<{
-  firstname?: { message: string }[]
-  lastname?: { message: string }[]
-  othernames?: { message: string }[]
-  username?: { message: string }[]
-  dateOfBirth?: { message: string }[]
-  email?: { message: string }[]
-  phone?: { message: string }[]
-  address?: { message: string }[]
-  city?: { message: string }[]
-  country?: { message: string }[]
-  password?: { message: string }[]
-  confirmPassword?: { message: string }[]
+const data = $ref<{
+  firstname: { value: string; error?: { message: string }[] }
+  lastname: { value: string; error?: { message: string }[] }
+  othernames: { value: string; error?: { message: string }[] }
+  username: { value: string; error?: { message: string }[] }
+  dateOfBirth: { value: string; error?: { message: string }[] }
+  email: { value: string; error?: { message: string }[] }
+  phone: { value: string; error?: { message: string }[] }
+  address: { value: string; error?: { message: string }[] }
+  city: { value: string; error?: { message: string }[] }
+  country: { value: string; error?: { message: string }[] }
+  password: { value: string; error?: { message: string }[] }
+  confirmPassword: { value: string; error?: { message: string }[] }
 }>({
-  firstname: undefined,
-  lastname: undefined,
-  othernames: undefined,
-  username: undefined,
-  dateOfBirth: undefined,
-  email: undefined,
-  phone: undefined,
-  address: undefined,
-  city: undefined,
-  country: undefined,
-  password: undefined,
-  confirmPassword: undefined
+  firstname: { value: '', error: undefined },
+  lastname: { value: '', error: undefined },
+  othernames: { value: '', error: undefined },
+  username: { value: '', error: undefined },
+  dateOfBirth: { value: '', error: undefined },
+  email: { value: '', error: undefined },
+  phone: { value: '', error: undefined },
+  address: { value: '', error: undefined },
+  city: { value: '', error: undefined },
+  country: { value: '', error: undefined },
+  password: { value: '', error: undefined },
+  confirmPassword: { value: '', error: undefined }
 })
+
+// validate firstname
+watch(
+  () => data.firstname.value,
+  firstname => {
+    if (firstname && firstname.trim().length < 1)
+      data.firstname.error = [{ message: 'Firstname must not be empty' }]
+    else data.firstname.error = undefined
+  }
+)
+
+// validate lastname
+watch(
+  () => data.lastname.value,
+  lastname => {
+    if (lastname && lastname.trim().length < 1)
+      data.lastname.error = [{ message: 'Lastname must not be empty' }]
+    else data.lastname.error = undefined
+  }
+)
+
+// validate username
+watch(
+  () => data.username.value,
+  username => {
+    if (username && username.trim().length < 1)
+      data.username.error = [{ message: 'Username must not be empty' }]
+    else data.username.error = undefined
+  }
+)
+
+// validate date of birth
+watch(
+  () => data.dateOfBirth.value,
+  dateOfBirth => {
+    if (dateOfBirth && dateOfBirth.trim().length < 1)
+      data.dateOfBirth.error = [{ message: 'Date of Birth must not be empty' }]
+    else data.dateOfBirth.error = undefined
+  }
+)
 
 // validate email
 watch(
-  () => email,
+  () => data.email.value,
   email => {
-    if (email && !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      errors.email = [
-        {
-          message: 'Enter a valid Email Address'
+    if (email) {
+      data.email.error = undefined
+
+      // check for the length of the username part(email)
+      if (email.split('@')[0].length < 1)
+        data.email.error = [{ message: 'Email must not be empty' }]
+
+      // check if the email has an @ symbol
+      if (!email.includes('@'))
+        data.email.error = [
+          ...(data.email.error || []),
+          { message: 'Email must contain an @ symbol' }
+        ]
+
+      // check for tld (top level domain) after the @ symbol
+      const domain = email.split('@')[1] || undefined
+      // /^(?!:\/\/)([a-z0-9]+(-[a-z0-9]+)*\.)+[a-a-zA-Z]{2,}$/i.test(domain)
+      if (domain) {
+        // check if the email has a domain
+        if (!domain.includes('.')) {
+          data.email.error = [...(data.email.error || []), { message: 'Email must contain a .' }]
         }
-      ]
-    } else errors.password = undefined
+
+        // check if the domain has a tld (top level domain)
+        const tld = domain.split('.')[1] || undefined
+        if (!tld || !/^[a-zA-Z]{2,}$/.test(tld)) {
+          data.email.error = [
+            ...(data.email.error || []),
+            { message: 'Email must contain a valid TLD eg. .com, .co, .org, ' }
+          ]
+        }
+
+        // check if the domain has a subdomain
+        const subdomain = domain.split('.')[0] || undefined
+        if (!subdomain || !/^[a-zA-Z0-9-]+$/.test(subdomain)) {
+          data.email.error = [
+            ...(data.email.error || []),
+            { message: 'Email must contain a valid subdomain eg. example in example.com' }
+          ]
+        }
+      } else {
+        data.email.error = [
+          ...(data.email.error || []),
+          { message: 'Email must contain a domain ie. example.com' }
+        ]
+      }
+    } else data.email.error = undefined
   }
 )
 
 // validate password
 watch(
-  () => password,
+  () => data.password.value,
   password => {
     if (password) {
-      errors.password = undefined
+      data.password.error = undefined
 
       // check for length of password
       if (password.length < 8)
-        errors.password = [{ message: 'Password must be at least 8 characters' }]
+        data.password.error = [
+          ...(data.password.error || []),
+          { message: 'Password must be at least 8 characters' }
+        ]
 
       // check for uppercase
       if (!password.match(/[A-Z]/))
-        errors.password = [
-          ...(errors.password || []),
+        data.password.error = [
+          ...(data.password.error || []),
           { message: 'Password must contain at least one uppercase letter.' }
         ]
 
       // check for lowercase
       if (!password.match(/[a-z]/))
-        errors.password = [
-          ...(errors.password || []),
+        data.password.error = [
+          ...(data.password.error || []),
           { message: 'Password must contain at least one lowercase letter.' }
         ]
 
       // check for number
       if (!password.match(/[0-9]/))
-        errors.password = [
-          ...(errors.password || []),
+        data.password.error = [
+          ...(data.password.error || []),
           { message: 'Password must contain at least one number.' }
         ]
 
       // check for special character
       if (!password.match(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/))
-        errors.password = [
-          ...(errors.password || []),
+        data.password.error = [
+          ...(data.password.error || []),
           { message: 'Password must contain at least one special character.' }
         ]
 
       // check for spaces in password
       if (password.match(/\s/))
-        errors.password = [
-          ...(errors.password || []),
+        data.password.error = [
+          ...(data.password.error || []),
           { message: 'Password must not contain any spaces' }
         ]
-    } else errors.password = undefined
+    } else data.password.error = undefined
   }
 )
 
 // watch confirm password
 watch(
-  () => confirmPassword,
+  () => data.confirmPassword.value,
   confirmPassword => {
-    if (confirmPassword && confirmPassword !== password)
-      errors.confirmPassword = [{ message: 'Passwords do not match' }]
-    else errors.confirmPassword = undefined
+    if (confirmPassword && confirmPassword !== data.password.value)
+      data.confirmPassword.error = [{ message: 'Passwords do not match' }]
+    else data.confirmPassword.error = undefined
   }
 )
 </script>
@@ -127,14 +196,14 @@ watch(
     <!-- Back Button -->
     <NuxtLink
       to="/"
-      class="fixed top-4 left-4 z-10 flex items-center space-x-2 bg-blue-600 py-1.5 pr-3 pl-1 uppercase hover:bg-blue-700 dark:text-white max-sm:h-10 max-sm:w-10 max-sm:justify-center"
+      class="fixed left-4 top-4 z-10 flex items-center space-x-2 bg-blue-600 py-1.5 pl-1 pr-3 uppercase hover:bg-blue-700 dark:text-white max-sm:h-10 max-sm:w-10 max-sm:justify-center"
     >
       <ChevronLeftIcon class="h-4 w-auto max-sm:-mr-2 max-sm:h-6" />
       <span class="max-sm:hidden">Back</span>
     </NuxtLink>
     <!-- Main -->
     <div class="relative min-h-screen w-full">
-      <div class="h-auto w-full pt-14 pb-12 md:pt-20">
+      <div class="h-auto w-full pb-12 pt-14 md:pt-20">
         <!-- header -->
         <header class="w-auto">
           <h1 class="mx-auto flex w-auto items-center justify-center space-x-4">
@@ -159,11 +228,11 @@ watch(
             <!-- header -->
             <h2 class="mx-5 text-xl font-bold uppercase tracking-wider lg:mx-0">Names</h2>
             <!-- fields -->
-            <div class="grid gap-y-11 gap-x-6 lg:grid-cols-2">
+            <div class="grid gap-x-6 gap-y-11 lg:grid-cols-2">
               <Input
                 :id="`firstname`"
-                v-model:value="firstname"
-                v-model:error="errors.firstname"
+                v-model:value="data.firstname.value"
+                v-model:error="data.firstname.error"
                 :type="`text`"
                 :required="true"
                 :header="`Firstname`"
@@ -172,8 +241,8 @@ watch(
               />
               <Input
                 :id="`lastname`"
-                v-model:value="lastname"
-                v-model:error="errors.lastname"
+                v-model:value="data.lastname.value"
+                v-model:error="data.lastname.error"
                 :type="`text`"
                 :required="true"
                 :header="`Lastname`"
@@ -182,8 +251,8 @@ watch(
               />
               <Input
                 :id="`othernames`"
-                v-model:value="othernames"
-                v-model:error="errors.othernames"
+                v-model:value="data.othernames.value"
+                v-model:error="data.othernames.error"
                 :type="`text`"
                 :required="false"
                 :header="`Othernames`"
@@ -199,12 +268,12 @@ watch(
               Contact and Dates
             </h2>
             <!-- fields -->
-            <div class="grid gap-y-11 gap-x-6 lg:grid-cols-2">
+            <div class="grid gap-x-6 gap-y-11 lg:grid-cols-2">
               <!-- phone -->
               <Input
                 :id="`phone`"
-                v-model:value="phone"
-                v-model:error="errors.phone"
+                v-model:value="data.phone.value"
+                v-model:error="data.phone.error"
                 :type="`text`"
                 :required="false"
                 :header="`Phone`"
@@ -214,8 +283,8 @@ watch(
               <!-- dateOfBirth -->
               <Input
                 :id="`dateOfBirth`"
-                v-model:value="dateOfBirth"
-                v-model:error="errors.dateOfBirth"
+                v-model:value="data.dateOfBirth.value"
+                v-model:error="data.dateOfBirth.error"
                 :type="`date`"
                 :required="true"
                 :header="`Date of Birth`"
@@ -229,12 +298,12 @@ watch(
             <!-- header -->
             <h2 class="mx-5 text-xl font-bold uppercase tracking-wider lg:mx-0">Address</h2>
             <!-- fields -->
-            <div class="grid gap-y-11 gap-x-6 lg:grid-cols-2">
+            <div class="grid gap-x-6 gap-y-11 lg:grid-cols-2">
               <!-- city -->
               <Input
                 :id="`city`"
-                v-model:value="city"
-                v-model:error="errors.city"
+                v-model:value="data.city.value"
+                v-model:error="data.city.error"
                 :type="`text`"
                 :required="false"
                 :header="`City`"
@@ -244,8 +313,8 @@ watch(
               <!-- country -->
               <Input
                 :id="`country`"
-                v-model:value="country"
-                v-model:error="errors.country"
+                v-model:value="data.country.value"
+                v-model:error="data.country.error"
                 :type="`text`"
                 :required="false"
                 :header="`Country`"
@@ -255,8 +324,8 @@ watch(
               <!-- address -->
               <Input
                 :id="`address`"
-                v-model:value="address"
-                v-model:error="errors.address"
+                v-model:value="data.address.value"
+                v-model:error="data.address.error"
                 :type="`text`"
                 :required="false"
                 :header="`Address`"
@@ -271,12 +340,12 @@ watch(
             <!-- header -->
             <h2 class="mx-5 text-xl font-bold uppercase tracking-wider lg:mx-0">Account Detals</h2>
             <!-- fields -->
-            <div class="grid gap-y-11 gap-x-6 lg:grid-cols-2">
+            <div class="grid gap-x-6 gap-y-11 lg:grid-cols-2">
               <!-- username -->
               <Input
                 :id="`username`"
-                v-model:value="username"
-                v-model:error="errors.username"
+                v-model:value="data.username.value"
+                v-model:error="data.username.error"
                 :type="`text`"
                 :required="true"
                 :header="`Username`"
@@ -286,8 +355,8 @@ watch(
               <!-- email -->
               <Input
                 :id="`email`"
-                v-model:value="email"
-                v-model:error="errors.email"
+                v-model:value="data.email.value"
+                v-model:error="data.email.error"
                 :type="`email`"
                 :required="true"
                 :header="`Email`"
@@ -301,12 +370,12 @@ watch(
             <!-- header -->
             <h2 class="mx-5 text-xl font-bold uppercase tracking-wider lg:mx-0">Passwords</h2>
             <!-- fields -->
-            <div class="grid gap-y-11 gap-x-6 lg:grid-cols-2">
+            <div class="grid gap-x-6 gap-y-11 lg:grid-cols-2">
               <!-- password -->
               <Input
                 :id="`password`"
-                v-model:value="password"
-                v-model:error="errors.password"
+                v-model:value="data.password.value"
+                v-model:error="data.password.error"
                 :type="`password`"
                 :required="true"
                 :header="`Password`"
@@ -316,8 +385,8 @@ watch(
               <!-- confirm password -->
               <Input
                 :id="`confirmPassword`"
-                v-model:value="confirmPassword"
-                v-model:error="errors.confirmPassword"
+                v-model:value="data.confirmPassword.value"
+                v-model:error="data.confirmPassword.error"
                 :type="`password`"
                 :required="true"
                 :header="`Confirm Password`"

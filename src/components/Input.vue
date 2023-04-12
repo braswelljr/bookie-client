@@ -69,7 +69,7 @@ console.log(value)
       <!-- labels -->
       <label
         :for="id"
-        :class="`absolute left-2 -top-6 scale-y-0 transition-all peer-placeholder-shown:scale-y-100 dark:text-zinc-300`"
+        :class="`absolute -top-6 left-2 scale-y-0 transition-all peer-placeholder-shown:scale-y-100 dark:text-zinc-300`"
       >
         {{ header }} <span v-if="required" class="text-red-600">*</span>
       </label>
