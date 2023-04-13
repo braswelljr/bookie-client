@@ -3,7 +3,7 @@ import ChevronLeftIcon from '@/components/icons/ChevronLeftIcon.vue'
 import SpinnerIcon from '@/components/icons/SpinnerIcon.vue'
 import Input from '@/components/Input.vue'
 
-const loading = $ref(false)
+let loading = $ref(false)
 
 // form state
 const data = $ref<{
@@ -189,6 +189,26 @@ watch(
     else data.confirmPassword.error = undefined
   }
 )
+
+function onSubmit() {
+  // check if there are any errors
+  if (
+    data.firstname.error ||
+    data.lastname.error ||
+    data.username.error ||
+    data.dateOfBirth.error ||
+    data.email.error ||
+    data.password.error ||
+    data.confirmPassword.error
+  ) {
+    // show error message
+    // data.error = 'Please fix the errors above'
+    return
+  }
+
+  // set loading to true
+  loading = true
+}
 </script>
 
 <template>
@@ -221,7 +241,7 @@ watch(
           action="#"
           method="post"
           class="mt-10 space-y-10 not-last:space-y-10 md:mx-auto md:w-4/5 lg:w-3/5 xl:w-2/5"
-          @submit="() => {}"
+          @submit="onSubmit"
         >
           <!-- Names -->
           <div class="">

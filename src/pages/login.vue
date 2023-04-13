@@ -3,87 +3,86 @@ import ChevronLeftIcon from '@/components/icons/ChevronLeftIcon.vue'
 import SpinnerIcon from '@/components/icons/SpinnerIcon.vue'
 import Input from '@/components/Input.vue'
 
-const loading = $ref(false)
+let loading = $ref(false)
 
 // form state
-const email = $ref('')
-const password = $ref('')
-
-// validation
-const errors = $ref<{
-  email?: {
-    message: string
-  }[]
-  password?: {
-    message: string
-  }[]
+const data = $ref<{
+  email: { value: string; error?: { message: string }[] }
+  password: { value: string; error?: { message: string }[] }
 }>({
-  email: undefined,
-  password: undefined
+  email: { value: '', error: undefined },
+  password: { value: '', error: undefined }
 })
 
 // validate email
 watch(
-  () => email,
+  () => data.email.value,
   email => {
     if (email && !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      errors.email = [
+      data.email.error = [
         {
           message: 'Enter a valid Email Address'
         }
       ]
-    } else errors.password = undefined
+    } else data.email.error = undefined
   }
 )
 
 // validate password
 watch(
-  () => password,
+  () => data.password.value,
   password => {
     if (password) {
-      errors.password = undefined
+      data.password.error = undefined
 
       // check for length of password
       if (password.length < 8)
-        errors.password = [{ message: 'Password must be at least 8 characters' }]
+        data.password.error = [{ message: 'Password must be at least 8 characters' }]
 
       // check for uppercase
       if (!password.match(/[A-Z]/))
-        errors.password = [
-          ...(errors.password || []),
+        data.password.error = [
+          ...(data.password.error || []),
           { message: 'Password must contain at least one uppercase letter.' }
         ]
 
       // check for lowercase
       if (!password.match(/[a-z]/))
-        errors.password = [
-          ...(errors.password || []),
+        data.password.error = [
+          ...(data.password.error || []),
           { message: 'Password must contain at least one lowercase letter.' }
         ]
 
       // check for number
       if (!password.match(/[0-9]/))
-        errors.password = [
-          ...(errors.password || []),
+        data.password.error = [
+          ...(data.password.error || []),
           { message: 'Password must contain at least one number.' }
         ]
 
       // check for special character
       if (!password.match(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/))
-        errors.password = [
-          ...(errors.password || []),
+        data.password.error = [
+          ...(data.password.error || []),
           { message: 'Password must contain at least one special character.' }
         ]
 
       // check for spaces in password
       if (password.match(/\s/))
-        errors.password = [
-          ...(errors.password || []),
+        data.password.error = [
+          ...(data.password.error || []),
           { message: 'Password must not contain any spaces' }
         ]
-    } else errors.password = undefined
+    } else data.password.error = undefined
   }
 )
+
+function onSubmit() {
+  if (data.email.error || data.password.error) return
+
+  // ch
+  loading = true
+}
 </script>
 
 <template>
@@ -113,13 +112,13 @@ watch(
           action="#"
           method="post"
           class="mt-14 space-y-10 md:mx-auto md:w-2/3 lg:w-1/2 xl:w-2/5"
-          @submit="() => {}"
+          @submit="onSubmit"
         >
           <!-- email -->
           <Input
             :id="`email`"
-            v-model:value="email"
-            v-model:error="errors.email"
+            v-model:value="data.email.value"
+            v-model:error="data.email.error"
             :type="`email`"
             :required="true"
             :header="`Email`"
@@ -129,8 +128,8 @@ watch(
           <!-- password -->
           <Input
             :id="`password`"
-            v-model:value="password"
-            v-model:error="errors.password"
+            v-model:value="data.password.value"
+            v-model:error="data.password.error"
             :type="`password`"
             :required="true"
             :header="`Password`"
