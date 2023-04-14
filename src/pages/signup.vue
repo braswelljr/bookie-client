@@ -1,37 +1,32 @@
 <script setup lang="ts">
-import ChevronLeftIcon from '@/components/icons/ChevronLeftIcon.vue'
-import SpinnerIcon from '@/components/icons/SpinnerIcon.vue'
-import Input from '@/components/Input.vue'
+import ChevronLeftIcon from '~/components/icons/ChevronLeftIcon.vue'
+import SpinnerIcon from '~/components/icons/SpinnerIcon.vue'
+import Input from '~/components/Input.vue'
+import flattenArray from '~/utils/flattenArray'
 
 let loading = $ref(false)
 
 // form state
 const data = $ref<{
-  firstname: { value: string; error?: { message: string }[] }
-  lastname: { value: string; error?: { message: string }[] }
-  othernames: { value: string; error?: { message: string }[] }
-  username: { value: string; error?: { message: string }[] }
-  dateOfBirth: { value: string; error?: { message: string }[] }
-  email: { value: string; error?: { message: string }[] }
-  phone: { value: string; error?: { message: string }[] }
-  address: { value: string; error?: { message: string }[] }
-  city: { value: string; error?: { message: string }[] }
-  country: { value: string; error?: { message: string }[] }
-  password: { value: string; error?: { message: string }[] }
-  confirmPassword: { value: string; error?: { message: string }[] }
+  firstname: { value: string; required: boolean; error?: { message: string }[] }
+  lastname: { value: string; required: boolean; error?: { message: string }[] }
+  othernames: { value: string; required: boolean; error?: { message: string }[] }
+  username: { value: string; required: boolean; error?: { message: string }[] }
+  dateOfBirth: { value: string; required: boolean; error?: { message: string }[] }
+  email: { value: string; required: boolean; error?: { message: string }[] }
+  phone: { value: string; required: boolean; error?: { message: string }[] }
+  password: { value: string; required: boolean; error?: { message: string }[] }
+  confirmPassword: { value: string; required: boolean; error?: { message: string }[] }
 }>({
-  firstname: { value: '', error: undefined },
-  lastname: { value: '', error: undefined },
-  othernames: { value: '', error: undefined },
-  username: { value: '', error: undefined },
-  dateOfBirth: { value: '', error: undefined },
-  email: { value: '', error: undefined },
-  phone: { value: '', error: undefined },
-  address: { value: '', error: undefined },
-  city: { value: '', error: undefined },
-  country: { value: '', error: undefined },
-  password: { value: '', error: undefined },
-  confirmPassword: { value: '', error: undefined }
+  firstname: { value: '', required: true, error: undefined },
+  lastname: { value: '', required: true, error: undefined },
+  othernames: { value: '', required: false, error: undefined },
+  username: { value: '', required: true, error: undefined },
+  dateOfBirth: { value: '', required: true, error: undefined },
+  email: { value: '', required: true, error: undefined },
+  phone: { value: '', required: true, error: undefined },
+  password: { value: '', required: true, error: undefined },
+  confirmPassword: { value: '', required: true, error: undefined }
 })
 
 // validate firstname
@@ -189,25 +184,36 @@ watch(
     else data.confirmPassword.error = undefined
   }
 )
+const onSubmit = (e: Event) => {
+  // change loading state
+  loading = true
+  // prevent default during submision
+  e.preventDefault()
+  // loop and map all errors into onto
+  const errors = flattenArray(
+    Object.entries(data).map(([key, { value, required, error }]) => {
+      let all: string[] = []
+      if (error && error.length > 0) {
+        all = [...all, ...error.map(v => v.message)]
+      }
 
-function onSubmit() {
-  // check if there are any errors
-  if (
-    data.firstname.error ||
-    data.lastname.error ||
-    data.username.error ||
-    data.dateOfBirth.error ||
-    data.email.error ||
-    data.password.error ||
-    data.confirmPassword.error
-  ) {
-    // show error message
-    // data.error = 'Please fix the errors above'
+      if (value && value.trim().length < 1 && required) {
+        all = [...all, `Value of ${key} should not be empty.`]
+      }
+
+      return all
+    })
+  )
+
+  // check for errors and
+  if (errors.length > 0) {
+    // change loading state and return
+    loading = false
     return
   }
 
-  // set loading to true
-  loading = true
+  // loading
+  loading = false
 }
 </script>
 
@@ -254,7 +260,7 @@ function onSubmit() {
                 v-model:value="data.firstname.value"
                 v-model:error="data.firstname.error"
                 :type="`text`"
-                :required="true"
+                :required="data.firstname.required"
                 :header="`Firstname`"
                 :class="`mx-5 lg:mx-0`"
                 :placeholder="`Firstname`"
@@ -264,7 +270,7 @@ function onSubmit() {
                 v-model:value="data.lastname.value"
                 v-model:error="data.lastname.error"
                 :type="`text`"
-                :required="true"
+                :required="data.lastname.required"
                 :header="`Lastname`"
                 :class="`mx-5 lg:mx-0`"
                 :placeholder="`Lastname`"
@@ -274,7 +280,7 @@ function onSubmit() {
                 v-model:value="data.othernames.value"
                 v-model:error="data.othernames.error"
                 :type="`text`"
-                :required="false"
+                :required="data.othernames.required"
                 :header="`Othernames`"
                 :class="`mx-5 lg:mx-0`"
                 :placeholder="`Othernames`"
@@ -295,7 +301,7 @@ function onSubmit() {
                 v-model:value="data.phone.value"
                 v-model:error="data.phone.error"
                 :type="`text`"
-                :required="false"
+                :required="data.phone.required"
                 :header="`Phone`"
                 :class="`mx-5 lg:mx-0`"
                 :placeholder="`Phone`"
@@ -306,51 +312,10 @@ function onSubmit() {
                 v-model:value="data.dateOfBirth.value"
                 v-model:error="data.dateOfBirth.error"
                 :type="`date`"
-                :required="true"
+                :required="data.dateOfBirth.required"
                 :header="`Date of Birth`"
                 :class="`mx-5 lg:mx-0`"
                 :placeholder="`Date of Birth`"
-              />
-            </div>
-          </div>
-          <!-- Address -->
-          <div class="">
-            <!-- header -->
-            <h2 class="mx-5 text-xl font-bold uppercase tracking-wider lg:mx-0">Address</h2>
-            <!-- fields -->
-            <div class="grid gap-x-6 gap-y-11 lg:grid-cols-2">
-              <!-- city -->
-              <Input
-                :id="`city`"
-                v-model:value="data.city.value"
-                v-model:error="data.city.error"
-                :type="`text`"
-                :required="false"
-                :header="`City`"
-                :class="`mx-5 lg:mx-0`"
-                :placeholder="`City`"
-              />
-              <!-- country -->
-              <Input
-                :id="`country`"
-                v-model:value="data.country.value"
-                v-model:error="data.country.error"
-                :type="`text`"
-                :required="false"
-                :header="`Country`"
-                :class="`mx-5 lg:mx-0`"
-                :placeholder="`Country`"
-              />
-              <!-- address -->
-              <Input
-                :id="`address`"
-                v-model:value="data.address.value"
-                v-model:error="data.address.error"
-                :type="`text`"
-                :required="false"
-                :header="`Address`"
-                :class="`mx-5 lg:mx-0`"
-                :placeholder="`Address`"
               />
             </div>
           </div>
@@ -367,7 +332,7 @@ function onSubmit() {
                 v-model:value="data.username.value"
                 v-model:error="data.username.error"
                 :type="`text`"
-                :required="true"
+                :required="data.username.required"
                 :header="`Username`"
                 :class="`mx-5 lg:mx-0`"
                 :placeholder="`Username`"
@@ -378,7 +343,7 @@ function onSubmit() {
                 v-model:value="data.email.value"
                 v-model:error="data.email.error"
                 :type="`email`"
-                :required="true"
+                :required="data.email.required"
                 :header="`Email`"
                 :class="`mx-5 lg:mx-0`"
                 :placeholder="`Email`"
@@ -397,7 +362,7 @@ function onSubmit() {
                 v-model:value="data.password.value"
                 v-model:error="data.password.error"
                 :type="`password`"
-                :required="true"
+                :required="data.password.required"
                 :header="`Password`"
                 :class="`mx-5 lg:mx-0`"
                 :placeholder="`Password`"
@@ -408,7 +373,7 @@ function onSubmit() {
                 v-model:value="data.confirmPassword.value"
                 v-model:error="data.confirmPassword.error"
                 :type="`password`"
-                :required="true"
+                :required="data.confirmPassword.required"
                 :header="`Confirm Password`"
                 :class="`mx-5 lg:mx-0`"
                 :placeholder="`Confirm Password`"

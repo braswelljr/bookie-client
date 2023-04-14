@@ -1,24 +1,25 @@
 <script setup lang="ts">
-import ChevronLeftIcon from '@/components/icons/ChevronLeftIcon.vue'
-import SpinnerIcon from '@/components/icons/SpinnerIcon.vue'
-import Input from '@/components/Input.vue'
+import ChevronLeftIcon from '~/components/icons/ChevronLeftIcon.vue'
+import SpinnerIcon from '~/components/icons/SpinnerIcon.vue'
+import Input from '~/components/Input.vue'
+import flattenArray from '~/utils/flattenArray'
 
 let loading = $ref(false)
 
 // form state
 const data = $ref<{
-  email: { value: string; error?: { message: string }[] }
-  password: { value: string; error?: { message: string }[] }
+  email: { value: string; required: boolean; error?: { message: string }[] }
+  password: { value: string; required: boolean; error?: { message: string }[] }
 }>({
-  email: { value: '', error: undefined },
-  password: { value: '', error: undefined }
+  email: { value: '', required: true, error: undefined },
+  password: { value: '', required: true, error: undefined }
 })
 
 // validate email
 watch(
   () => data.email.value,
   email => {
-    if (email && !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+    if (email && !email.match(/^(?!:\/\/)([^\s@]+@[^\s@]+\.)+[^\s@]{2,}$/)) {
       data.email.error = [
         {
           message: 'Enter a valid Email Address'
@@ -77,11 +78,37 @@ watch(
   }
 )
 
-function onSubmit() {
-  if (data.email.error || data.password.error) return
-
-  // ch
+const onSubmit = (e: Event) => {
+  // change loading state
   loading = true
+  // prevent default during submision
+  e.preventDefault()
+  // loop and map all errors into onto
+  const errors = flattenArray(
+    Object.entries(data).map(([key, { value, required, error }]) => {
+      let all: string[] = []
+      if (error && error.length > 0) {
+        all = [...all, ...error.map(v => v.message)]
+      }
+
+      if (value && value.trim().length < 1 && required) {
+        all = [...all, `Value of ${key} should not be empty.`]
+      }
+
+      return all
+    })
+  )
+
+  // check for errors and
+  if (errors.length > 0) {
+    // change loading state and return
+    loading = false
+    console.log(errors)
+    return
+  }
+
+  // loading
+  loading = false
 }
 </script>
 
