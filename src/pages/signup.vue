@@ -3,6 +3,7 @@ import ChevronLeftIcon from '~/components/icons/ChevronLeftIcon.vue'
 import SpinnerIcon from '~/components/icons/SpinnerIcon.vue'
 import Input from '~/components/Input.vue'
 import flattenArray from '~/utils/flattenArray'
+import mapNonFalsyValuesToObject from '~/utils/mapNonFalsyValues'
 
 let loading = $ref(false)
 
@@ -211,6 +212,15 @@ const onSubmit = (e: Event) => {
     loading = false
     return
   }
+
+  // map all data key value.value into a new object
+  const values = Object.entries(data).reduce((acc, [key, value]) => {
+    acc[key] = value.value
+    return acc
+  }, {} as Record<string, string>)
+
+  // map and add the non-empty fields into a new object
+  const payload = mapNonFalsyValuesToObject(values)
 
   // loading
   loading = false

@@ -2,7 +2,9 @@
 import ChevronLeftIcon from '~/components/icons/ChevronLeftIcon.vue'
 import SpinnerIcon from '~/components/icons/SpinnerIcon.vue'
 import Input from '~/components/Input.vue'
+import { baseApiUrl } from '~/config/constants'
 import flattenArray from '~/utils/flattenArray'
+import mapNonFalsyValuesToObject from '~/utils/mapNonFalsyValues'
 
 let loading = $ref(false)
 
@@ -78,7 +80,7 @@ watch(
   }
 )
 
-const onSubmit = (e: Event) => {
+const onSubmit = async (e: Event) => {
   // change loading state
   loading = true
   // prevent default during submision
@@ -105,6 +107,51 @@ const onSubmit = (e: Event) => {
     loading = false
     console.log(errors)
     return
+  }
+
+  // map all data key value.value into a new object
+  const values = Object.entries(data).reduce((acc, [key, value]) => {
+    acc[key] = value.value
+    return acc
+  }, {} as Record<string, string>)
+
+  // map and add the non-empty fields into a new object
+  const payload = mapNonFalsyValuesToObject(values)
+
+  try {
+    // fetch from url
+    const response = await fetch(`${baseApiUrl}/login`, {
+      method: 'POST',
+      mode: 'cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+
+    // check for response status
+    if (response.ok || response.status === 200 || response.status === 201) {
+      // get the response data
+      const data = await response.json()
+
+      // check for data
+      if (data) {
+        // set the token in local storage
+        localStorage.setItem('token', data.token)
+        // redirect to dashboard
+        // $router.push('/dashboard')
+      }
+    } else {
+      // change loading state
+      loading = false
+      // get the response data
+      const data = await response.json()
+      // check for data
+      if (data) {
+        // log the error
+        console.log(data)
+      }
+    }
+  } catch (error) {
+    console.log(error)
   }
 
   // loading
