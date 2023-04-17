@@ -21,8 +21,8 @@ interface ClassArray extends Array<ClassValue> {}
  * @params args - class names to join together (string, array, object)
  * @returns {string} - joined class names
  * @example
- * Usage: <div :class="className('class1', 'class2', 'class3', { 'class4': true })"></div>
- * Output: <div class="class1 class2 class3 class4"></div>
+ * Usage: <div :class="className('class1', 'class2', 'class3', { 'class4': true }, ['class5'])"></div>
+ * Output: <div class="class1 class2 class3 class4 class5 class6"></div>
  */
 export default function className(...args: ClassValue[]): string {
   const classes: string[] = []
