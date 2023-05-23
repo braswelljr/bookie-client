@@ -5,7 +5,7 @@ import EyeClosedIcon from '@/components/icons/EyeClosedIcon.vue'
 const props = withDefaults(
   defineProps<{
     class?: string
-    as?: 'input' | 'textarea' | string
+    as?: 'input' | 'textarea'
     type?: 'text' | 'password' | 'date' | 'email' | 'number' | 'tel' | 'url'
     id: string
     rows?: number
@@ -32,16 +32,13 @@ defineEmits<{
 
 const showPassword = $ref<boolean>(false)
 
-const header = $computed(() => props.header || props.placeholder)
+const h = $computed(() => props.header || props.placeholder)
 
 // computed error
 const errors = $computed(() => props.error)
 
 // value
-const value = $computed(() => props.value)
-
-// log errors
-console.log(value)
+const v = $computed(() => props.value)
 </script>
 
 <template>
@@ -51,7 +48,7 @@ console.log(value)
       <Component
         :is="as"
         :id="id"
-        v-model="value"
+        v-model="v"
         :type="type === 'password' ? (showPassword ? 'text' : 'password') : type"
         :placeholder="placeholder"
         auto-complete="off"
@@ -64,14 +61,14 @@ console.log(value)
             ? `border-red-500/50 focus:border-red-600/50 dark:border-red-500/50 dark:focus:border-red-500/50`
             : `border-blue-700/50 dark:border-zinc-900/50`
         }`"
-        @input="(e: Event) => $emit('update:value', (e.target as HTMLInputElement).value)"
+        @input="(e: Event) => $emit('update:value', (e.target as HTMLInputElement | HTMLTextAreaElement ).value)"
       />
       <!-- labels -->
       <label
         :for="id"
         :class="`absolute -top-6 left-2 scale-y-0 transition-all peer-placeholder-shown:scale-y-100 dark:text-zinc-300`"
       >
-        {{ header }} <span v-if="required" class="text-red-600">*</span>
+        {{ h }} <span v-if="required" class="text-red-600">*</span>
       </label>
       <label
         :for="id"

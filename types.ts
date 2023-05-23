@@ -57,3 +57,7 @@ export interface InputError {
   field: string
   message: string
 }
+
+export interface ErrorCause extends Error {
+  cause?: { error: Error; res: Response }
+}

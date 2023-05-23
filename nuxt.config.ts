@@ -25,15 +25,12 @@ export default defineNuxtConfig({
     }
   },
   modules: [
-    // '@nuxtjs/i18n',
-    '@nuxt/image-edge',
     '@pinia/nuxt',
     '@nuxtjs/color-mode',
     '@nuxtjs/device',
     '@nuxtjs/tailwindcss',
     '@vueuse/nuxt',
-    'nuxt-headlessui',
-    'nuxt-icons'
+    'nuxt-headlessui'
   ],
   experimental: {
     reactivityTransform: true,
@@ -51,16 +48,6 @@ export default defineNuxtConfig({
     globalName: '__COLOR_THEME__',
     classSuffix: '',
     storageKey: '__COLOR_THEME__'
-  },
-  nuxtIcons: {
-    size: '24px', // default <Icon> size applied
-    class: 'icon', // default <Icon> class applied
-    aliases: {
-      nuxt: 'logos:nuxt-icon'
-    }
-  },
-  image: {
-    provider: 'proxy'
   },
   headlessui: {},
   postcss: {

@@ -2,8 +2,10 @@
 import ChevronLeftIcon from '~/components/icons/ChevronLeftIcon.vue'
 import SpinnerIcon from '~/components/icons/SpinnerIcon.vue'
 import Input from '~/components/Input.vue'
+import { baseApiUrl } from '~/config/constants'
 import flattenArray from '~/utils/flattenArray'
 import mapNonFalsyValuesToObject from '~/utils/mapNonFalsyValues'
+import { ErrorCause } from '~~/types'
 
 let loading = $ref(false)
 
@@ -185,7 +187,7 @@ watch(
     else data.confirmPassword.error = undefined
   }
 )
-const onSubmit = (e: Event) => {
+const onSubmit = async (e: Event) => {
   // change loading state
   loading = true
   // prevent default during submision
@@ -221,6 +223,31 @@ const onSubmit = (e: Event) => {
 
   // map and add the non-empty fields into a new object
   const payload = mapNonFalsyValuesToObject(values)
+
+  try {
+    const response = await fetch(`${baseApiUrl}/signup`, {
+      method: 'POST',
+      headers: {
+        mode: 'cors',
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
+      body: JSON.stringify(payload)
+    })
+
+    // check if response is not ok throw error
+    if (!response.ok) throw new Error("Couldn't Signup User", { cause: { response } })
+  } catch (error) {
+    let err: ErrorCause
+    if (error instanceof Error) err = error as ErrorCause
+    else err = new Error("Couldn't Signup User", { cause: { error } }) as ErrorCause
+
+    switch (err.cause?.res?.status) {
+      default:
+        console.log(err)
+        break
+    }
+  }
 
   // loading
   loading = false
