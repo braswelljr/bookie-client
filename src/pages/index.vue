@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Github from '@/components/icons/GithubIcon.vue'
-import Toast from '~/components/Toast.vue'
 
 const points = [
   {
@@ -64,7 +63,6 @@ const points = [
         </div>
       </div>
     </div>
-    <Toast />
     <!-- footer -->
     <footer>
       <div class="mx-auto flex max-w-3xl justify-between py-3 max-lg:px-5">

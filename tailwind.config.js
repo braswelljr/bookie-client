@@ -13,6 +13,13 @@ module.exports = {
       '3xl': '1920px',
       ...defaultTheme.screens
     },
+    container: {
+      center: true,
+      padding: '2rem',
+      screens: {
+        '2xl': '1400px'
+      }
+    },
     extend: {
       fontFamily: {
         sans: ["'Lexend'", ...defaultTheme.fontFamily.sans],
@@ -36,7 +43,9 @@ module.exports = {
       },
       animation: {
         spin: 'spin 1s linear infinite',
-        grow: 'grow 500ms linear 0ms infinite'
+        grow: 'grow 500ms linear 0ms infinite',
+        'accordion-down': 'accordion-down 0.2s ease-out',
+        'accordion-up': 'accordion-up 0.2s ease-out'
       },
       keyframes: {
         spin: {
@@ -50,6 +59,14 @@ module.exports = {
         move: {
           '0%': { translateX: '0' },
           '100%': { translateX: '-100%' }
+        },
+        'accordion-down': {
+          from: { height: 0 },
+          to: { height: 'var(--radix-accordion-content-height)' }
+        },
+        'accordion-up': {
+          from: { height: 'var(--radix-accordion-content-height)' },
+          to: { height: 0 }
         }
       },
       transitionProperty: {
@@ -67,6 +84,7 @@ module.exports = {
   plugins: [
     require('@tailwindcss/aspect-ratio'),
     require('@tailwindcss/forms'),
+    require('tailwindcss-animate'),
     // direct child selector variant
     function ({ addVariant }) {
       addVariant('child', '& > *')

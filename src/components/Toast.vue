@@ -5,8 +5,10 @@ import XIcon from '~/components/icons/XIcon.vue'
 
 defineProps<{
   class?: string
-  closeClass?: string
   variant?: 'default' | 'error' | 'success' | 'info' | 'warning'
+  title?: string | Slottable
+  description?: string | Slottable
+  action?: string | Slottable
 }>()
 
 const toastVariants = cva(
@@ -29,14 +31,27 @@ const toastVariants = cva(
 </script>
 
 <template>
+  <!-- toast viewport -->
   <div
     class="fixed bottom-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[520px]"
   >
     <!-- toast -->
     <div :class="className(toastVariants({ variant }))">
       <!-- button -->
-      <button type="button" class="absolute right-2 top-2 rounded-md p-1" :class="closeClass">
-        <XIcon class="h-6 w-6" />
+      <button type="button" class="absolute right-2 top-2 rounded-md p-1" toast-close="">
+        <XIcon class="h-5 w-5" />
+      </button>
+      <div className="grid gap-1">
+        <!-- title -->
+        <h3 v-if="title" class="sm:text-xsm text-xs font-semibold uppercase">{{ title }}</h3>
+        <!-- body -->
+        <p v-if="description" class="text-sm">{{ description }}</p>
+      </div>
+      <button
+        v-if="action"
+        class="inline-flex h-8 shrink-0 items-center justify-center rounded-md border border-neutral-200 bg-transparent px-3 text-sm font-medium transition-colors hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-red-100 group-[.destructive]:hover:border-neutral-50 group-[.destructive]:hover:bg-red-100 group-[.destructive]:hover:text-red-600 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600 dark:border-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-700 dark:hover:text-neutral-100 dark:focus:ring-neutral-400 dark:focus:ring-offset-neutral-900 dark:data-[state=open]:bg-neutral-800"
+      >
+        {{ action }}
       </button>
     </div>
   </div>

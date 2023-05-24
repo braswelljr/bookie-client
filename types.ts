@@ -7,9 +7,6 @@ export interface User {
   dateOfBirth: string
   email: string
   phone: string
-  address: string
-  city: string
-  country: string
   role: string
   createdAt: Date
   updatedAt: Date
@@ -42,15 +39,15 @@ export interface Task {
   status: string
   category: string
   pinned: boolean
-  pinned_at: Date
-  pinned_position: 1
+  pinnedAt: Date
+  pinnedPosition: 1
   archived: boolean
-  archived_at: Date
+  archivedAt: Date
   completed: boolean
-  completed_at: Date
+  completedAt: Date
   color: string
-  created_at: Date
-  updated_at: Date
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface InputError {
@@ -60,4 +57,18 @@ export interface InputError {
 
 export interface ErrorCause extends Error {
   cause?: { error: Error; res: Response }
+}
+
+export interface ToastI {
+  id: string
+  title?: string | Slottable
+  description?: string | Slottable
+  action?: string | Slottable
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  variant?: 'default' | 'success' | 'warning' | 'error'
+}
+
+export interface ToastState {
+  toasts: ToastI[]
 }

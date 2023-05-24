@@ -187,6 +187,7 @@ watch(
     else data.confirmPassword.error = undefined
   }
 )
+
 const onSubmit = async (e: Event) => {
   // change loading state
   loading = true
@@ -216,13 +217,13 @@ const onSubmit = async (e: Event) => {
   }
 
   // map all data key value.value into a new object
-  const values = Object.entries(data).reduce((acc, [key, value]) => {
-    acc[key] = value.value
-    return acc
-  }, {} as Record<string, string>)
-
   // map and add the non-empty fields into a new object
-  const payload = mapNonFalsyValuesToObject(values)
+  const payload = mapNonFalsyValuesToObject(
+    Object.entries(data).reduce((acc, [key, value]) => {
+      acc[key] = value.value
+      return acc
+    }, {} as Record<string, string>)
+  )
 
   try {
     const response = await fetch(`${baseApiUrl}/signup`, {
@@ -243,6 +244,7 @@ const onSubmit = async (e: Event) => {
     else err = new Error("Couldn't Signup User", { cause: { error } }) as ErrorCause
 
     switch (err.cause?.res?.status) {
+      case 500:
       default:
         console.log(err)
         break
