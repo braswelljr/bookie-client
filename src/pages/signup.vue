@@ -2,12 +2,15 @@
 import ChevronLeftIcon from '~/components/icons/ChevronLeftIcon.vue'
 import SpinnerIcon from '~/components/icons/SpinnerIcon.vue'
 import Input from '~/components/Input.vue'
-import { baseApiUrl } from '~/config/constants'
+import { baseApiUrl, bcookies } from '~/config/constants'
 import flattenArray from '~/utils/flattenArray'
 import mapNonFalsyValuesToObject from '~/utils/mapNonFalsyValues'
-import { ErrorCause } from '~~/types'
+import { AuthenticationPayload, ErrorCause } from '~~/types'
+import useToast from '~/store/useToast'
 
-let loading = $ref(false)
+const router = useRouter()
+const loading = ref(false)
+const { addToast } = useToast()
 
 // form state
 const data = $ref<{
@@ -190,7 +193,7 @@ watch(
 
 const onSubmit = async (e: Event) => {
   // change loading state
-  loading = true
+  loading.value = true
   // prevent default during submision
   e.preventDefault()
   // loop and map all errors into onto
@@ -212,7 +215,7 @@ const onSubmit = async (e: Event) => {
   // check for errors and
   if (errors.length > 0) {
     // change loading state and return
-    loading = false
+    loading.value = false
     return
   }
 
@@ -237,7 +240,30 @@ const onSubmit = async (e: Event) => {
     })
 
     // check if response is not ok throw error
-    if (!response.ok) throw new Error("Couldn't Signup User", { cause: { response } })
+    if (!response.ok) throw new Error("Couldn't signup user", { cause: { response } })
+
+    // get data from response
+    const data: AuthenticationPayload = await response.json()
+
+    // check if data.payload is not empty
+    if (!data.payload || !data.token) throw new Error(data.message, { cause: { data } })
+
+    // get cookie
+    const cookie = useCookie(bcookies.authentication.name, bcookies.authentication.options)
+
+    // set cookie
+    cookie.value = JSON.stringify({ token: data.token, user: data.payload })
+
+    // toast
+    addToast({
+      variant: 'success',
+      title: 'Success',
+      description: 'Signup Successful.',
+      id: ''
+    })
+
+    // redirect to home
+    router.push('/main')
   } catch (error) {
     let err: ErrorCause
     if (error instanceof Error) err = error as ErrorCause
@@ -245,14 +271,28 @@ const onSubmit = async (e: Event) => {
 
     switch (err.cause?.res?.status) {
       case 500:
+        addToast({
+          variant: 'error',
+          title: 'Error',
+          description: 'Something went wrong. Please try again later.',
+          id: ''
+        })
+        break
+
       default:
         console.log(err)
+        addToast({
+          variant: 'error',
+          title: 'Error',
+          description: err.message,
+          id: ''
+        })
         break
     }
+  } finally {
+    // change loading state
+    loading.value = false
   }
-
-  // loading
-  loading = false
 }
 </script>
 
@@ -424,7 +464,7 @@ const onSubmit = async (e: Event) => {
             <!-- submit -->
             <button
               type="submit"
-              class="w-full rounded bg-blue-600 p-2 font-semibold uppercase text-white transition-transform hover:-translate-y-[2px] focus:outline-none focus:ring-0 dark:bg-blue-600"
+              class="inline-flex w-full justify-center rounded bg-blue-600 p-2 font-semibold uppercase text-white transition-transform hover:-translate-y-[2px] focus:outline-none focus:ring-0 dark:bg-blue-600"
             >
               <SpinnerIcon v-if="loading" class="h-5 w-auto" />
               <span v-else>Signup</span>

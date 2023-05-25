@@ -26,6 +26,16 @@ module.exports = {
         serif: ["'Lobster'", ...defaultTheme.fontFamily.serif],
         mono: ["'Jetbrains Mono'", ...defaultTheme.fontFamily.mono]
       },
+      fontSize: {
+        xs: ['0.65rem', '0.75rem'],
+        xsm: ['0.75rem', '1rem']
+      },
+      maxWidth: {
+        '8xl': '90rem',
+        '9xl': '100rem',
+        '10xl': '110rem',
+        '11xl': '120rem'
+      },
       colors: {
         brown: {
           900: '#382519',

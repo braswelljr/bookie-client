@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Github from '@/components/icons/GithubIcon.vue'
+import useToast from '~/store/useToast'
 
 const points = [
   {
@@ -19,6 +20,10 @@ const points = [
     description: 'Stay organized and keep track of your tasks with ease.'
   }
 ]
+
+const { addToast } = useToast()
+
+// add toast
 </script>
 
 <template>
@@ -52,13 +57,28 @@ const points = [
             </div>
           </div>
           <!-- Link -->
-          <div class="my-6">
+          <div class="my-6 space-x-2">
             <NuxtLink
               to="/login"
               class="bg-blue-600 px-5 py-2.5 text-center text-neutral-900 transition duration-100 ease-in-out hover:bg-blue-700 dark:text-white"
             >
               Get Started
             </NuxtLink>
+
+            <button
+              class="bg-red-600 px-5 py-2.5 text-center text-neutral-900 transition duration-100 ease-in-out hover:bg-red-700 dark:text-white"
+              @click="
+                addToast({
+                  id: '',
+                  variant: 'error',
+                  title: 'Welcome to Bookie!',
+                  description: 'Bookie is a simple and intuitive task management app.',
+                  actions: ['Get Started', 'Learn More']
+                })
+              "
+            >
+              Add Toast
+            </button>
           </div>
         </div>
       </div>

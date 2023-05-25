@@ -1,3 +1,10 @@
+export interface AuthenticationPayload {
+  message: string
+  token: string
+  code: number
+  payload?: User | null
+}
+
 export interface User {
   id: string
   firstname: string
@@ -63,12 +70,8 @@ export interface ToastI {
   id: string
   title?: string | Slottable
   description?: string | Slottable
-  action?: string | Slottable
+  actions?: string[] | Slottable[]
   open?: boolean
   onOpenChange?: (open: boolean) => void
-  variant?: 'default' | 'success' | 'warning' | 'error'
-}
-
-export interface ToastState {
-  toasts: ToastI[]
+  variant?: 'default' | 'success' | 'warning' | 'error' | 'info'
 }

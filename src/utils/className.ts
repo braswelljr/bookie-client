@@ -8,7 +8,7 @@ interface ClassObject {
 /**
  * ClassValue - An interface to define the type for the className function
  */
-type ClassValue = string | ClassObject | ClassArray
+type ClassValue = string | ClassObject | ClassArray | undefined | null
 
 /**
  * ClassArray - An interface to define the array type for the className function

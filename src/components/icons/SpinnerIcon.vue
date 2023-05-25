@@ -11,7 +11,7 @@ defineProps<{
     fill="none"
     viewBox="0 0 24 24"
   >
-    <circle class="opacity-20" :cx="12" :cy="12" :r="10" stroke="currentColor" :stroke-width="12" />
+    <circle class="opacity-0" :cx="12" :cy="12" :r="10" stroke="currentColor" :stroke-width="12" />
     <path
       class="opacity-75"
       fill="currentColor"

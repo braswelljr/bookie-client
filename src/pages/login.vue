@@ -2,11 +2,16 @@
 import ChevronLeftIcon from '~/components/icons/ChevronLeftIcon.vue'
 import SpinnerIcon from '~/components/icons/SpinnerIcon.vue'
 import Input from '~/components/Input.vue'
-import { baseApiUrl } from '~/config/constants'
+import { baseApiUrl, bcookies } from '~/config/constants'
 import flattenArray from '~/utils/flattenArray'
 import mapNonFalsyValuesToObject from '~/utils/mapNonFalsyValues'
+import { AuthenticationPayload, ErrorCause } from '~~/types'
+import useToast from '~/store/useToast'
 
-let loading = $ref(false)
+const router = useRouter()
+const { addToast } = useToast()
+
+const loading = ref(false)
 
 // form state
 const data = $ref<{
@@ -42,34 +47,6 @@ watch(
       if (password.length < 8)
         data.password.error = [{ message: 'Password must be at least 8 characters' }]
 
-      // check for uppercase
-      if (!password.match(/[A-Z]/))
-        data.password.error = [
-          ...(data.password.error || []),
-          { message: 'Password must contain at least one uppercase letter.' }
-        ]
-
-      // check for lowercase
-      if (!password.match(/[a-z]/))
-        data.password.error = [
-          ...(data.password.error || []),
-          { message: 'Password must contain at least one lowercase letter.' }
-        ]
-
-      // check for number
-      if (!password.match(/[0-9]/))
-        data.password.error = [
-          ...(data.password.error || []),
-          { message: 'Password must contain at least one number.' }
-        ]
-
-      // check for special character
-      if (!password.match(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/))
-        data.password.error = [
-          ...(data.password.error || []),
-          { message: 'Password must contain at least one special character.' }
-        ]
-
       // check for spaces in password
       if (password.match(/\s/))
         data.password.error = [
@@ -82,7 +59,7 @@ watch(
 
 const onSubmit = async (e: Event) => {
   // change loading state
-  loading = true
+  loading.value = true
   // prevent default during submision
   e.preventDefault()
   // loop and map all errors into onto
@@ -104,7 +81,7 @@ const onSubmit = async (e: Event) => {
   // check for errors and
   if (errors.length > 0) {
     // change loading state and return
-    loading = false
+    loading.value = false
     console.log(errors)
     return
   }
@@ -119,43 +96,88 @@ const onSubmit = async (e: Event) => {
   const payload = mapNonFalsyValuesToObject(values)
 
   try {
-    // fetch from url
     const response = await fetch(`${baseApiUrl}/login`, {
       method: 'POST',
-      mode: 'cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      headers: {
+        mode: 'cors',
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        Authorization: `Basic ${btoa(`${payload.email}:${payload.password}`)}`
+      }
     })
 
-    // check for response status
-    if (response.ok || response.status === 200 || response.status === 201) {
-      // get the response data
-      const data = await response.json()
+    // check if response is not ok throw error
+    if (!response.ok) throw new Error("Couldn't login user", { cause: { response } })
 
-      // check for data
-      if (data) {
-        // set the token in local storage
-        localStorage.setItem('token', data.token)
-        // redirect to dashboard
-        // $router.push('/dashboard')
-      }
-    } else {
-      // change loading state
-      loading = false
-      // get the response data
-      const data = await response.json()
-      // check for data
-      if (data) {
-        // log the error
-        console.log(data)
-      }
-    }
+    // get data from response
+    const data: AuthenticationPayload = await response.json()
+
+    // check if data.payload is not empty
+    if (!data.payload || !data.token) throw new Error(data.message, { cause: { data } })
+
+    // get cookie
+    const cookie = useCookie(bcookies.authentication.name, bcookies.authentication.options)
+
+    // set cookie
+    cookie.value = JSON.stringify({ token: data.token, user: data.payload })
+
+    // toast
+    addToast({
+      variant: 'success',
+      title: 'Success',
+      description: 'Successfully logged in.',
+      id: ''
+    })
+
+    // redirect to home
+    router.push('/main')
   } catch (error) {
-    console.log(error)
-  }
+    let err: ErrorCause
+    if (error instanceof Error) err = error as ErrorCause
+    else err = new Error("Couldn't Signup User", { cause: { error } }) as ErrorCause
 
-  // loading
-  loading = false
+    switch (err.cause?.res?.status) {
+      case 500:
+        addToast({
+          variant: 'error',
+          title: 'Error',
+          description: 'Something went wrong. Please try again later.',
+          id: ''
+        })
+        break
+
+      case 401:
+        addToast({
+          variant: 'error',
+          title: 'Error',
+          description: 'Invalid email or password.',
+          id: ''
+        })
+        break
+
+      case 400:
+        addToast({
+          variant: 'error',
+          title: 'Error',
+          description: 'Invalid email or password.',
+          id: ''
+        })
+        break
+
+      default:
+        console.log(err)
+        addToast({
+          variant: 'error',
+          title: 'Error',
+          description: err.message,
+          id: ''
+        })
+        break
+    }
+  } finally {
+    // change loading state
+    loading.value = false
+  }
 }
 </script>
 
@@ -215,7 +237,7 @@ const onSubmit = async (e: Event) => {
             <!-- submit -->
             <button
               type="submit"
-              class="w-full rounded bg-blue-600 p-2 font-semibold uppercase text-white transition-transform hover:-translate-y-[2px] focus:outline-none focus:ring-0 dark:bg-blue-600"
+              class="inline-flex w-full justify-center rounded bg-blue-600 p-2 font-semibold uppercase text-white transition-transform hover:-translate-y-[2px] focus:outline-none focus:ring-0 dark:bg-blue-600"
             >
               <SpinnerIcon v-if="loading" class="h-5 w-auto" />
               <span v-else>Login</span>
