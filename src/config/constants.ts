@@ -9,7 +9,7 @@ export const bcookies = {
     options: {
       path: '/',
       secure: true,
-      httpOnly: true,
+      watch: true,
       maxAge: 60 * 60 * 24 // 1 day
     }
   }

@@ -1,10 +1,23 @@
-<script setup lang="ts">
-import Toast from '~/components/Toast.vue'
-</script>
 <template>
   <div>
     <slot />
-    <!-- toast for notifications -->
-    <Toast />
   </div>
 </template>
+
+<script setup lang="ts">
+import { bcookies } from '~/config/constants'
+
+const router = useRouter()
+
+const cookies = useCookie(bcookies.authentication.name, bcookies.authentication.options)
+
+const isAuthenticated = computed(() => !!cookies.value)
+
+watch(
+  isAuthenticated,
+  isAuthenticated => {
+    if (isAuthenticated) router.push('/main')
+  },
+  { immediate: true }
+)
+</script>

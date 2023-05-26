@@ -15,6 +15,7 @@ watch(
   { immediate: true }
 )
 </script>
+
 <template>
   <div>
     <div>main layout</div>
