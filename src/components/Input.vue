@@ -30,15 +30,15 @@ defineEmits<{
   (e: 'update:value', value: string): void
 }>()
 
-const showPassword = $ref<boolean>(false)
+const showPassword = ref<boolean>(false)
 
-const h = $computed(() => props.header || props.placeholder)
+const h = computed(() => props.header || props.placeholder)
 
 // computed error
-const errors = $computed(() => props.error)
+const errors = computed(() => props.error)
 
 // value
-const v = $computed(() => props.value)
+const v = computed(() => props.value)
 </script>
 
 <template>

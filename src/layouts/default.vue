@@ -16,7 +16,7 @@ const isAuthenticated = computed(() => !!cookies.value)
 watch(
   isAuthenticated,
   isAuthenticated => {
-    if (isAuthenticated) router.push('/main')
+    if (isAuthenticated) router.push('/dashboard')
   },
   { immediate: true }
 )

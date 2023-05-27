@@ -14,7 +14,7 @@ const { addToast } = useToast()
 const loading = ref(false)
 
 // form state
-const data = $ref<{
+const data = ref<{
   email: { value: string; required: boolean; error?: { message: string }[] }
   password: { value: string; required: boolean; error?: { message: string }[] }
 }>({
@@ -24,36 +24,36 @@ const data = $ref<{
 
 // validate email
 watch(
-  () => data.email.value,
+  () => data.value.email.value,
   email => {
     if (email && !email.match(/^(?!:\/\/)([^\s@]+@[^\s@]+\.)+[^\s@]{2,}$/)) {
-      data.email.error = [
+      data.value.email.error = [
         {
           message: 'Enter a valid Email Address'
         }
       ]
-    } else data.email.error = undefined
+    } else data.value.email.error = undefined
   }
 )
 
 // validate password
 watch(
-  () => data.password.value,
+  () => data.value.password.value,
   password => {
     if (password) {
-      data.password.error = undefined
+      data.value.password.error = undefined
 
       // check for length of password
       if (password.length < 8)
-        data.password.error = [{ message: 'Password must be at least 8 characters' }]
+        data.value.password.error = [{ message: 'Password must be at least 8 characters' }]
 
       // check for spaces in password
       if (password.match(/\s/))
-        data.password.error = [
-          ...(data.password.error || []),
+        data.value.password.error = [
+          ...(data.value.password.error || []),
           { message: 'Password must not contain any spaces' }
         ]
-    } else data.password.error = undefined
+    } else data.value.password.error = undefined
   }
 )
 
@@ -64,7 +64,7 @@ const onSubmit = async (e: Event) => {
   e.preventDefault()
   // loop and map all errors into onto
   const errors = flattenArray(
-    Object.entries(data).map(([key, { value, required, error }]) => {
+    Object.entries(data.value).map(([key, { value, required, error }]) => {
       let all: string[] = []
       if (error && error.length > 0) {
         all = [...all, ...error.map(v => v.message)]
@@ -87,7 +87,7 @@ const onSubmit = async (e: Event) => {
   }
 
   // map all data key value.value into a new object
-  const values = Object.entries(data).reduce((acc, [key, value]) => {
+  const values = Object.entries(data.value).reduce((acc, [key, value]) => {
     acc[key] = value.value
     return acc
   }, {} as Record<string, string>)
@@ -113,7 +113,7 @@ const onSubmit = async (e: Event) => {
     const data: AuthenticationPayload = await response.json()
 
     // check if data.payload is not empty
-    if (!data.payload || !data.token) throw new Error(data.message, { cause: { data } })
+    // if (!data.payload || !data.token) throw new Error(data.message, { cause: { data } })
 
     // get cookie
     const cookie = useCookie(bcookies.authentication.name, bcookies.authentication.options)
@@ -130,7 +130,7 @@ const onSubmit = async (e: Event) => {
     })
 
     // redirect to home
-    router.push('/main')
+    router.push('/dashboard')
   } catch (error) {
     let err: ErrorCause
     if (error instanceof Error) err = error as ErrorCause

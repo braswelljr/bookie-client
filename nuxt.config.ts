@@ -32,10 +32,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     'nuxt-headlessui'
   ],
-  experimental: {
-    reactivityTransform: true,
-    inlineSSRStyles: false
-  },
+  experimental: {},
   alias: {
     images: fileURLToPath(new URL('./assets/images', import.meta.url)),
     fonts: fileURLToPath(new URL('./assets/fonts', import.meta.url)),

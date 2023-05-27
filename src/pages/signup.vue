@@ -13,7 +13,7 @@ const loading = ref(false)
 const { addToast } = useToast()
 
 // form state
-const data = $ref<{
+const data = ref<{
   firstname: { value: string; required: boolean; error?: { message: string }[] }
   lastname: { value: string; required: boolean; error?: { message: string }[] }
   othernames: { value: string; required: boolean; error?: { message: string }[] }
@@ -37,59 +37,59 @@ const data = $ref<{
 
 // validate firstname
 watch(
-  () => data.firstname.value,
+  () => data.value.firstname.value,
   firstname => {
     if (firstname && firstname.trim().length < 1)
-      data.firstname.error = [{ message: 'Firstname must not be empty' }]
-    else data.firstname.error = undefined
+      data.value.firstname.error = [{ message: 'Firstname must not be empty' }]
+    else data.value.firstname.error = undefined
   }
 )
 
 // validate lastname
 watch(
-  () => data.lastname.value,
+  () => data.value.lastname.value,
   lastname => {
     if (lastname && lastname.trim().length < 1)
-      data.lastname.error = [{ message: 'Lastname must not be empty' }]
-    else data.lastname.error = undefined
+      data.value.lastname.error = [{ message: 'Lastname must not be empty' }]
+    else data.value.lastname.error = undefined
   }
 )
 
 // validate username
 watch(
-  () => data.username.value,
+  () => data.value.username.value,
   username => {
     if (username && username.trim().length < 1)
-      data.username.error = [{ message: 'Username must not be empty' }]
-    else data.username.error = undefined
+      data.value.username.error = [{ message: 'Username must not be empty' }]
+    else data.value.username.error = undefined
   }
 )
 
 // validate date of birth
 watch(
-  () => data.dateOfBirth.value,
+  () => data.value.dateOfBirth.value,
   dateOfBirth => {
     if (dateOfBirth && dateOfBirth.trim().length < 1)
-      data.dateOfBirth.error = [{ message: 'Date of Birth must not be empty' }]
-    else data.dateOfBirth.error = undefined
+      data.value.dateOfBirth.error = [{ message: 'Date of Birth must not be empty' }]
+    else data.value.dateOfBirth.error = undefined
   }
 )
 
 // validate email
 watch(
-  () => data.email.value,
+  () => data.value.email.value,
   email => {
     if (email) {
-      data.email.error = undefined
+      data.value.email.error = undefined
 
       // check for the length of the username part(email)
       if (email.split('@')[0].length < 1)
-        data.email.error = [{ message: 'Email must not be empty' }]
+        data.value.email.error = [{ message: 'Email must not be empty' }]
 
       // check if the email has an @ symbol
       if (!email.includes('@'))
-        data.email.error = [
-          ...(data.email.error || []),
+        data.value.email.error = [
+          ...(data.value.email.error || []),
           { message: 'Email must contain an @ symbol' }
         ]
 
@@ -99,14 +99,17 @@ watch(
       if (domain) {
         // check if the email has a domain
         if (!domain.includes('.')) {
-          data.email.error = [...(data.email.error || []), { message: 'Email must contain a .' }]
+          data.value.email.error = [
+            ...(data.value.email.error || []),
+            { message: 'Email must contain a .' }
+          ]
         }
 
         // check if the domain has a tld (top level domain)
         const tld = domain.split('.')[1] || undefined
         if (!tld || !/^[a-zA-Z]{2,}$/.test(tld)) {
-          data.email.error = [
-            ...(data.email.error || []),
+          data.value.email.error = [
+            ...(data.value.email.error || []),
             { message: 'Email must contain a valid TLD eg. .com, .co, .org, ' }
           ]
         }
@@ -114,80 +117,80 @@ watch(
         // check if the domain has a subdomain
         const subdomain = domain.split('.')[0] || undefined
         if (!subdomain || !/^[a-zA-Z0-9-]+$/.test(subdomain)) {
-          data.email.error = [
-            ...(data.email.error || []),
+          data.value.email.error = [
+            ...(data.value.email.error || []),
             { message: 'Email must contain a valid subdomain eg. example in example.com' }
           ]
         }
       } else {
-        data.email.error = [
-          ...(data.email.error || []),
+        data.value.email.error = [
+          ...(data.value.email.error || []),
           { message: 'Email must contain a domain ie. example.com' }
         ]
       }
-    } else data.email.error = undefined
+    } else data.value.email.error = undefined
   }
 )
 
 // validate password
 watch(
-  () => data.password.value,
+  () => data.value.password.value,
   password => {
     if (password) {
-      data.password.error = undefined
+      data.value.password.error = undefined
 
       // check for length of password
       if (password.length < 8)
-        data.password.error = [
-          ...(data.password.error || []),
+        data.value.password.error = [
+          ...(data.value.password.error || []),
           { message: 'Password must be at least 8 characters' }
         ]
 
       // check for uppercase
       if (!password.match(/[A-Z]/))
-        data.password.error = [
-          ...(data.password.error || []),
+        data.value.password.error = [
+          ...(data.value.password.error || []),
           { message: 'Password must contain at least one uppercase letter.' }
         ]
 
       // check for lowercase
       if (!password.match(/[a-z]/))
-        data.password.error = [
-          ...(data.password.error || []),
+        data.value.password.error = [
+          ...(data.value.password.error || []),
           { message: 'Password must contain at least one lowercase letter.' }
         ]
 
       // check for number
       if (!password.match(/[0-9]/))
-        data.password.error = [
-          ...(data.password.error || []),
+        data.value.password.error = [
+          ...(data.value.password.error || []),
           { message: 'Password must contain at least one number.' }
         ]
 
       // check for special character
       if (!password.match(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/))
-        data.password.error = [
-          ...(data.password.error || []),
+        data.value.password.error = [
+          ...(data.value.password.error || []),
           { message: 'Password must contain at least one special character.' }
         ]
 
       // check for spaces in password
       if (password.match(/\s/))
-        data.password.error = [
-          ...(data.password.error || []),
+        data.value.password.error = [
+          ...(data.value.password.error || []),
           { message: 'Password must not contain any spaces' }
         ]
-    } else data.password.error = undefined
+    } else data.value.password.error = undefined
   }
 )
 
 // watch confirm password
 watch(
-  () => data.confirmPassword.value,
+  () => data.value.confirmPassword.value,
   confirmPassword => {
-    if (confirmPassword && confirmPassword !== data.password.value)
-      data.confirmPassword.error = [{ message: 'Passwords do not match' }]
-    else data.confirmPassword.error = undefined
+    if (confirmPassword && confirmPassword !== data.value.password.value)
+      data.value.confirmPassword.error = [{ message: 'Passwords do not match' }]
+    else data.value.confirmPassword.error = undefined
   }
 )
 
@@ -198,7 +201,7 @@ const onSubmit = async (e: Event) => {
   e.preventDefault()
   // loop and map all errors into onto
   const errors = flattenArray(
-    Object.entries(data).map(([key, { value, required, error }]) => {
+    Object.entries(data.value).map(([key, { value, required, error }]) => {
       let all: string[] = []
       if (error && error.length > 0) {
         all = [...all, ...error.map(v => v.message)]
@@ -222,7 +225,7 @@ const onSubmit = async (e: Event) => {
   // map all data key value.value into a new object
   // map and add the non-empty fields into a new object
   const payload = mapNonFalsyValuesToObject(
-    Object.entries(data).reduce((acc, [key, value]) => {
+    Object.entries(data.value).reduce((acc, [key, value]) => {
       acc[key] = value.value
       return acc
     }, {} as Record<string, string>)
@@ -263,7 +266,7 @@ const onSubmit = async (e: Event) => {
     })
 
     // redirect to home
-    router.push('/main')
+    router.push('/dashboard')
   } catch (error) {
     let err: ErrorCause
     if (error instanceof Error) err = error as ErrorCause
