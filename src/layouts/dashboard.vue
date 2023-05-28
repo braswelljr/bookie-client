@@ -17,7 +17,7 @@ watch(
 </script>
 
 <template>
-  <div>
+  <div class="">
     <div>main layout</div>
     <slot />
   </div>

@@ -7,53 +7,19 @@ defineProps<{
 <template>
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke-width="1.5"
-    stroke="currentColor"
     :class="$props.class"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    stroke-width="2"
+    stroke="currentColor"
+    fill="none"
+    stroke-linecap="round"
+    stroke-linejoin="round"
   >
-    <!-- gradient for  -->
-    <defs>
-      <linearGradient id="gradient" x1="0" y1="20%" x2="100%" y2="40%">
-        <stop id="stop1" offset="0%" stop-color="#005eff" />
-        <stop id="stop2" offset="40%" stop-color="#f6d365" />
-        <stop id="stop3" offset="20%" stop-color="#fda085" />
-        <stop id="stop4" offset="100%" stop-color="#7740bf" />
-      </linearGradient>
-    </defs>
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
     <path
-      fill="url(#gradient)"
-      d="M12,2A10,10,0,0,0,8.84,21.5c.5.08.66-.23.66-.5V19.31C6.73,19.91,6.14,18,6.14,18A2.69,2.69,0,0,0,5,16.5c-.91-.62.07-.6.07-.6a2.1,2.1,0,0,1,1.53,1,2.15,2.15,0,0,0,2.91.83,2.16,2.16,0,0,1,.63-1.34C8,16.17,5.62,15.31,5.62,11.5a3.87,3.87,0,0,1,1-2.71,3.58,3.58,0,0,1,.1-2.64s.84-.27,2.75,1a9.63,9.63,0,0,1,5,0c1.91-1.29,2.75-1,2.75-1a3.58,3.58,0,0,1,.1,2.64,3.87,3.87,0,0,1,1,2.71c0,3.82-2.34,4.66-4.57,4.91a2.39,2.39,0,0,1,.69,1.85V21c0,.27.16.59.67.5A10,10,0,0,0,12,2Z"
-    />
-    <!-- animate -->
-    <animate
-      xlink:href="#stop1"
-      attributeName="offset"
-      values="1; 0.5; 0"
-      dur="12s"
-      repeatCount="indefinite"
-    />
-    <animate
-      xlink:href="#stop2"
-      attributeName="offset"
-      values="0.25; 0.75; 0"
-      dur="2s"
-      repeatCount="indefinite"
-    />
-    <animate
-      xlink:href="#stop3"
-      attributeName="offset"
-      values="0; 0.5"
-      dur="8s"
-      repeatCount="indefinite"
-    />
-    <animate
-      xlink:href="#stop4"
-      attributeName="offset"
-      values="1; 0.5; 1"
-      dur="4s"
-      repeatCount="indefinite"
-    />
+      d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"
+    ></path>
   </svg>
 </template>

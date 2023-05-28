@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Github from '@/components/icons/GithubIcon.vue'
-import useToast from '~/store/useToast'
+import ThemeSwitch from '~/components/ThemeSwitch.vue'
 
 const points = [
   {
@@ -20,8 +20,6 @@ const points = [
     description: 'Stay organized and keep track of your tasks with ease.'
   }
 ]
-
-const { addToast } = useToast()
 
 // add toast
 </script>
@@ -46,12 +44,12 @@ const { addToast } = useToast()
             <div
               v-for="(point, i) in points"
               :key="i"
-              :class="`relative min-h-[7.5rem] w-full transform bg-zinc-800/25 px-4 py-4 transition duration-100 ease-in-out hover:translate-y-[-0.15rem] max-sm:px-2 max-sm:py-2`"
+              :class="`relative w-full transform px-4 py-4 transition duration-100 ease-in-out hover:translate-y-[-0.15rem] max-sm:px-2 max-sm:py-2 md:bg-blue-100 md:dark:bg-blue-600`"
             >
-              <h2 class="text-xl font-bold text-neutral-900 dark:text-white max-xs:text-base">
+              <h2 class="text-xl font-bold text-zinc-950 dark:text-white max-xs:text-base">
                 {{ point.title }}
               </h2>
-              <p class="text-neutral-600 dark:text-neutral-400 max-xs:text-sm">
+              <p class="text-zinc-700 dark:text-zinc-300 max-xs:text-sm">
                 {{ point.description }}
               </p>
             </div>
@@ -60,49 +58,39 @@ const { addToast } = useToast()
           <div class="my-6 space-x-2">
             <NuxtLink
               to="/login"
-              class="bg-blue-600 px-5 py-2.5 text-center text-neutral-900 transition duration-100 ease-in-out hover:bg-blue-700 dark:text-white"
+              class="bg-blue-600 px-5 py-2.5 text-center text-white transition duration-100 ease-in-out hover:bg-blue-700"
             >
               Get Started
             </NuxtLink>
-
-            <button
-              class="bg-red-600 px-5 py-2.5 text-center text-neutral-900 transition duration-100 ease-in-out hover:bg-red-700 dark:text-white"
-              @click="
-                addToast({
-                  id: '',
-                  variant: 'error',
-                  title: 'Welcome to Bookie!',
-                  description: 'Bookie is a simple and intuitive task management app.',
-                  actions: ['Get Started', 'Learn More']
-                })
-              "
-            >
-              Add Toast
-            </button>
           </div>
         </div>
       </div>
     </div>
     <!-- footer -->
     <footer>
-      <div class="mx-auto flex max-w-3xl justify-between py-3 max-lg:px-5">
+      <div class="mx-auto max-w-3xl py-3 max-lg:px-5">
         <!-- logos -->
-        <div class="">
+        <div class="flex items-center justify-between">
           <!-- github link icon -->
           <a
             href="https://github.com/braswelljr/bookie-client"
             rel="noopener noreferrer"
             target="_blank"
-            class="text-neutral-900 dark:text-white"
+            class="inline-flex items-center space-x-2 text-neutral-900 dark:text-white"
           >
-            <Github class="h-10 w-auto" />
+            <Github class="h-7 w-auto" />
+            <span>Source code</span>
           </a>
+          <!-- copyright -->
+          <div class="">
+            <h6 class="gradient-text px-1 font-bold uppercase">
+              &copy; <span class="max-xs:hidden">{{ new Date().getFullYear() }}</span> Bookie
+            </h6>
+          </div>
         </div>
-        <!-- copyright -->
-        <div class="">
-          <h6 class="gradient-text px-1 text-2xl font-bold uppercase">
-            &copy; <span class="max-xs:hidden">{{ new Date().getFullYear() }}</span> Bookie
-          </h6>
+        <!-- theme switch -->
+        <div class="mt-4 flex justify-end">
+          <ThemeSwitch />
         </div>
       </div>
     </footer>

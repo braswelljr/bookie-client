@@ -304,7 +304,7 @@ const onSubmit = async (e: Event) => {
     <!-- Back Button -->
     <NuxtLink
       to="/"
-      class="fixed left-4 top-4 z-10 flex items-center space-x-2 bg-blue-600 py-1.5 pl-1 pr-3 uppercase hover:bg-blue-700 dark:text-white max-sm:h-10 max-sm:w-10 max-sm:justify-center"
+      class="fixed left-4 top-4 z-10 flex items-center space-x-2 bg-blue-600 py-1.5 pl-1 pr-3 uppercase text-white hover:bg-blue-700 max-sm:h-10 max-sm:w-10 max-sm:justify-center"
     >
       <ChevronLeftIcon class="h-4 w-auto max-sm:-mr-2 max-sm:h-6" />
       <span class="max-sm:hidden">Back</span>

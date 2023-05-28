@@ -30,7 +30,8 @@ export default defineNuxtConfig({
     '@nuxtjs/device',
     '@nuxtjs/tailwindcss',
     '@vueuse/nuxt',
-    'nuxt-headlessui'
+    'nuxt-headlessui',
+    '@vueuse/motion/nuxt'
   ],
   experimental: {},
   alias: {
