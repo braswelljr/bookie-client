@@ -194,6 +194,32 @@ watch(
   }
 )
 
+// prevent submission if there are errors
+watch(
+  () => data.value,
+  data => {
+    const errors = flattenArray(
+      Object.entries(data).map(([key, { value, required, error }]) => {
+        let all: string[] = []
+        if (error && error.length > 0) {
+          all = [...all, ...error.map(v => v.message)]
+        }
+
+        if (value && value.trim().length < 1 && required) {
+          all = [...all, `Value of ${key} should not be empty.`]
+        }
+
+        return all
+      })
+    )
+
+    if (errors.length > 0) {
+      loading.value = false
+    }
+  },
+  { deep: true }
+)
+
 const onSubmit = async (e: Event) => {
   // change loading state
   loading.value = true
