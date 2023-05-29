@@ -2,25 +2,24 @@
   <div class="" :class="$props.class">
     <ul class="flex space-x-1">
       <button
-        v-for="[mode, icon] in Object.entries({
-          system: isMobile ? PhoneIcon : DesktopIcon,
-          light: SunIcon,
-          dark: MoonIcon
-        })"
-        :key="mode"
+        v-for="([m, icon], i) in Object.entries(theme)"
+        :key="m"
         type="button"
         class="relative p-1.5"
-        @click="() => ($colorMode.value = mode)"
+        @click="COLORMODE()"
       >
         <div
-          v-if="mode === $colorMode.value"
-          v-motion
+          v-if="m === $colorMode.value"
           class="absolute inset-0 h-full w-full rounded-sm bg-blue-600"
+          :class="{
+            'rounded-l-sm': i === 0,
+            'rounded-r-sm': i === Object.entries(theme).length - 1
+          }"
         ></div>
         <Component
           :is="icon"
           class="relative z-[1] h-5 w-auto"
-          :class="mode === $colorMode.value && 'text-white'"
+          :class="m === $colorMode.value && 'text-white'"
         />
       </button>
     </ul>
@@ -37,5 +36,13 @@ defineProps<{
   class?: string
 }>()
 
+const color = useColorMode()
 const { isMobile } = useDevice()
+
+const COLORMODE = () => (color.preference = color.value === 'dark' ? 'light' : 'dark')
+const theme = {
+  system: isMobile ? PhoneIcon : DesktopIcon,
+  light: SunIcon,
+  dark: MoonIcon
+}
 </script>
