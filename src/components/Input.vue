@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import EyeIcon from '@/components/icons/EyeIcon.vue'
 import EyeClosedIcon from '@/components/icons/EyeClosedIcon.vue'
+import { cn } from '~/utils/className'
 
 const props = withDefaults(
   defineProps<{
@@ -42,8 +43,8 @@ const v = computed(() => props.value)
 </script>
 
 <template>
-  <div :class="`${$props.class} relative`">
-    <div className="relative w-full">
+  <div :class="cn(`${$props.class} relative`)">
+    <div class="relative w-full">
       <!-- input -->
       <Component
         :is="as"

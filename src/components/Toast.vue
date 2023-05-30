@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { cva } from 'class-variance-authority'
-import className from '~/utils/className'
+import { cn } from '~/utils/className'
 import XIcon from '~/components/icons/XIcon.vue'
 import useToast from '~/store/useToast'
 import { ToastI } from '~~/types'
@@ -64,7 +64,7 @@ watch(toasts, (ts: ToastI[]) => {
     <div
       v-for="{ id, variant, title, description, actions, open } in toasts"
       :key="id"
-      :class="className(toastVariants({ variant, state: open ? 'open' : 'closed' }), props.class)"
+      :class="cn(toastVariants({ variant, state: open ? 'open' : 'closed' }), props.class)"
     >
       <!-- button -->
       <button
@@ -75,7 +75,7 @@ watch(toasts, (ts: ToastI[]) => {
       >
         <XIcon class="h-5 w-5" />
       </button>
-      <div className="grid gap-3">
+      <div cn="grid gap-3">
         <!-- title -->
         <h3 v-if="title" class="text-sm font-semibold uppercase">
           {{ title }}

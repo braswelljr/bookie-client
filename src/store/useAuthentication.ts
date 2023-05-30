@@ -11,13 +11,17 @@ const useAuthentication = defineStore('authentication', () => {
 
   // watch cookie for first time mount
   const c = computed(() => info.value)
-  watch(c, cookie => {
-    if (cookie) {
-      const { user, token } = JSON.parse(cookie)
-      setUser(user)
-      setToken(token)
-    }
-  })
+  watch(
+    c,
+    cookie => {
+      if (cookie) {
+        const { user, token } = JSON.parse(cookie)
+        setUser(user)
+        setToken(token)
+      }
+    },
+    { immediate: true }
+  )
 
   /**
    * setUser - updates the user state

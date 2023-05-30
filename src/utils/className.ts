@@ -1,3 +1,6 @@
+import { ClassValue as ClV, clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+
 /**
  *  ClassObject - An interface to define the object type for the className function
  */
@@ -51,4 +54,8 @@ export default function className(...args: ClassValue[]): string {
   }
 
   return classes.join(' ')
+}
+
+export function cn(...inputs: ClV[]) {
+  return twMerge(clsx(...inputs))
 }

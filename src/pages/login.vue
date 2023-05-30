@@ -150,7 +150,7 @@ const onSubmit = async (e: Event) => {
     // toast
     addToast({
       variant: 'success',
-      title: 'Success',
+      title: 'Authentication Successful',
       description: 'Successfully logged in.',
       id: ''
     })
@@ -166,7 +166,7 @@ const onSubmit = async (e: Event) => {
       case 500:
         addToast({
           variant: 'error',
-          title: 'Error',
+          title: 'Authentication Error',
           description: 'Something went wrong. Please try again later.',
           id: ''
         })
@@ -175,7 +175,7 @@ const onSubmit = async (e: Event) => {
       case 401:
         addToast({
           variant: 'error',
-          title: 'Error',
+          title: 'Authentication Error',
           description: 'Invalid email or password.',
           id: ''
         })
@@ -184,7 +184,7 @@ const onSubmit = async (e: Event) => {
       case 400:
         addToast({
           variant: 'error',
-          title: 'Error',
+          title: 'Authentication Error',
           description: 'Invalid email or password.',
           id: ''
         })
@@ -194,7 +194,7 @@ const onSubmit = async (e: Event) => {
         console.log(err)
         addToast({
           variant: 'error',
-          title: 'Error',
+          title: 'Authentication Error',
           description: err.message,
           id: ''
         })
@@ -259,7 +259,7 @@ const onSubmit = async (e: Event) => {
             :placeholder="`Password`"
           />
           <!-- footer -->
-          <div className="mx-5 lg:mx-0 space-y-5">
+          <div class="mx-5 space-y-5 lg:mx-0">
             <!-- submit -->
             <button
               type="submit"
