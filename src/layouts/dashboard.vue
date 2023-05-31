@@ -31,7 +31,7 @@ const setO = () => (o.value = o.value === 'closed' ? 'opened' : 'closed')
         :set-o="setO"
         :class="
           cn(
-            'fixed inset-0 h-full w-full overflow-y-auto overflow-x-hidden transition-all lg:relative lg:inset-x-auto lg:inset-y-0 lg:left-0 lg:w-full lg:pt-16',
+            'fixed inset-0 h-full w-full overflow-y-auto overflow-x-hidden bg-zinc-50 transition-all dark:bg-zinc-950 lg:relative lg:inset-x-auto lg:inset-y-0 lg:left-0 lg:w-full lg:pt-16',
             o === 'closed' && '-translate-x-full lg:translate-x-0',
             o === 'opened' && 'max-lg:z-30 lg:translate-x-0'
           )
