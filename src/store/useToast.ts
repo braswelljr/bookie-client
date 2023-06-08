@@ -1,13 +1,20 @@
 import { defineStore } from 'pinia'
-import { ToastI } from '~~/types'
+import { ToastI, ToastRequest } from '~~/types'
 
 const useToast = defineStore('toasts', () => {
   const TOAST_LIMIT = 3
   const toasts = ref<ToastI[]>([])
 
-  const addToast = (toast: ToastI) => {
-    toast.id = Date.now().toString(36)
-    toast.open = true
+  const addToast = (t: ToastRequest) => {
+    const toast: ToastI = {
+      id: Date.now().toString(36),
+      title: t.title,
+      description: t.description,
+      actions: t.actions,
+      variant: t.variant,
+      open: t.open || true,
+      onOpenChange: t.onOpenChange
+    }
 
     if (toasts.value.length >= TOAST_LIMIT) toasts.value.shift()
 

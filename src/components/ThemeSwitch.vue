@@ -1,31 +1,27 @@
 <template>
   <div class="" :class="$props.class">
     <ul class="flex space-x-1">
-      <TransitionGroup>
-        <button
-          v-for="([m, icon], i) in Object.entries(theme)"
-          :key="m"
-          type="button"
-          class="relative p-1.5"
-          @click="COLORMODE()"
-        >
-          <Transition name="slide">
-            <div
-              v-if="m === $colorMode.preference"
-              class="absolute inset-0 h-full w-full rounded-sm bg-blue-600"
-              :class="{
-                'rounded-l-sm': i === 0,
-                'rounded-r-sm': i === Object.entries(theme).length - 1
-              }"
-            ></div>
-          </Transition>
-          <Component
-            :is="icon"
-            class="relative z-[1] h-5 w-auto"
-            :class="m === $colorMode.value && 'text-white'"
-          />
-        </button>
-      </TransitionGroup>
+      <button
+        v-for="([m, icon], i) in Object.entries(theme)"
+        :key="m"
+        type="button"
+        class="relative p-1.5"
+        @click="COLORMODE()"
+      >
+        <div
+          v-if="m === $colorMode.preference"
+          class="absolute inset-0 h-full w-full rounded-sm bg-blue-600"
+          :class="{
+            'rounded-l-sm': i === 0,
+            'rounded-r-sm': i === Object.entries(theme).length - 1
+          }"
+        ></div>
+        <Component
+          :is="icon"
+          class="relative z-[1] h-5 w-auto"
+          :class="m === $colorMode.value && 'text-white'"
+        />
+      </button>
     </ul>
   </div>
 </template>

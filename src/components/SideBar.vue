@@ -2,8 +2,10 @@
 import { cn } from '~/utils/className'
 import { DASHBOARD_NAVIGATION } from '~/config/navigation'
 import PlusIcon from '~/components/icons/PlusIcon.vue'
+import useAuthentication from '~/store/useAuthentication'
 
 const router = useRouter()
+const { elevatedMode, user } = useAuthentication()
 
 const props = defineProps<{
   class?: string
@@ -75,13 +77,25 @@ watch(
           "
           :href="path"
         >
-          <div class="flex w-full items-center justify-start px-4 py-2">
+          <div class="flex w-full items-center justify-start space-x-2 px-4 py-2 uppercase">
             <Component :is="icon" class="h-5 w-auto" />
             <span class="">{{ key }}</span>
           </div>
         </NuxtLink>
       </ul>
     </div>
-    <div class="">foot</div>
+    <!-- bottom -->
+    <div class="">
+      <div class="px-2 py-4">
+        <button
+          v-if="elevatedMode"
+          type="button"
+          class="w-full rounded-sm bg-blue-600 py-2 text-xs uppercase text-white"
+          :tabindex="-1"
+        >
+          {{ user?.role }}
+        </button>
+      </div>
+    </div>
   </aside>
 </template>

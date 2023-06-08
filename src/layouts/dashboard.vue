@@ -1,23 +1,40 @@
 <script setup lang="ts">
+import { useMediaQuery } from '@vueuse/core'
 import { bcookies } from '~/config/constants'
 import Navbar from '~/components/Navbar.vue'
 import SideBar from '~/components/SideBar.vue'
 import { cn } from '~/utils/className'
+import useAuthentication from '~/store/useAuthentication'
+import { AuthenticationCookie } from '~~/types'
 
 const router = useRouter()
+const route = useRoute()
+const { setUser, setToken, user, token } = useAuthentication()
+const lg = useMediaQuery('(min-width: 1024px)')
 
-const cookies = useCookie(bcookies.authentication.name, bcookies.authentication.options)
-const isAuthenticated = computed(() => !!cookies.value)
+const cookie = useCookie(bcookies.authentication.name, bcookies.authentication.options)
+const ValidCookie = computed(() => cookie.value as unknown as AuthenticationCookie | undefined)
+
 watch(
-  isAuthenticated,
-  isAuthenticated => {
-    if (!isAuthenticated) router.push('/login')
+  ValidCookie,
+  value => {
+    if (value && value.user && value.token) {
+      // set user and token
+      setUser(value.user)
+      setToken(value.token)
+
+      // check if user and token are valid or set
+      if (!user || !token) router.push('/login')
+
+      // check for route and redirect to dashboard if route
+      if (['/login', '/signup', '/'].includes(route.path)) router.push('/dashboard')
+    } else router.push('/login')
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
 
 const o: Ref<'closed' | 'opened'> = ref('closed')
-const setO = () => (o.value = o.value === 'closed' ? 'opened' : 'closed')
+const setO = () => lg && (o.value = o.value === 'closed' ? 'opened' : 'closed')
 </script>
 
 <template>
@@ -32,8 +49,8 @@ const setO = () => (o.value = o.value === 'closed' ? 'opened' : 'closed')
         :class="
           cn(
             'fixed inset-0 h-full w-full overflow-y-auto overflow-x-hidden bg-zinc-50 transition-all dark:bg-zinc-950 lg:relative lg:inset-x-auto lg:inset-y-0 lg:left-0 lg:w-full lg:pt-16',
-            o === 'closed' && '-translate-x-full lg:translate-x-0',
-            o === 'opened' && 'max-lg:z-30 lg:translate-x-0'
+            o === 'opened' && '-translate-x-full lg:translate-x-0',
+            o === 'closed' && 'max-lg:z-30 lg:translate-x-0'
           )
         "
       />

@@ -5,6 +5,8 @@ export interface AuthenticationPayload {
   payload?: User | null
 }
 
+export type UserRole = 'superadmin' | 'admin' | 'user'
+
 export interface User {
   id: string
   firstname: string
@@ -14,9 +16,14 @@ export interface User {
   dateOfBirth: string
   email: string
   phone: string
-  role: string
+  role: UserRole
   createdAt: Date
   updatedAt: Date
+}
+
+export type AuthenticationCookie = {
+  token: string
+  user: User
 }
 
 export interface Login {
@@ -65,7 +72,7 @@ export interface InputError {
 export interface ErrorCause extends Error {
   cause?: { error: Error; res: Response }
 }
-
+export type ToastVariant = 'default' | 'success' | 'warning' | 'error' | 'info'
 export interface ToastI {
   id: string
   title?: string | Slottable
@@ -73,5 +80,14 @@ export interface ToastI {
   actions?: string[] | Slottable[]
   open?: boolean
   onOpenChange?: (open: boolean) => void
-  variant?: 'default' | 'success' | 'warning' | 'error' | 'info'
+  variant?: ToastVariant
+}
+
+export interface ToastRequest {
+  title?: string
+  description?: string
+  actions?: string[]
+  variant?: ToastVariant
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
 }

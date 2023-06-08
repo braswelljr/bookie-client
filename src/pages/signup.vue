@@ -197,15 +197,15 @@ watch(
 // prevent submission if there are errors
 watch(
   () => data.value,
-  data => {
+  d => {
     const errors = flattenArray(
-      Object.entries(data).map(([key, { value, required, error }]) => {
+      Object.entries(d).map(([key, { value, required, error }]) => {
         let all: string[] = []
         if (error && error.length > 0) {
           all = [...all, ...error.map(v => v.message)]
         }
 
-        if (value && value.trim().length < 1 && required) {
+        if (value.trim().length < 1 && required) {
           all = [...all, `Value of ${key} should not be empty.`]
         }
 
@@ -233,7 +233,7 @@ const onSubmit = async (e: Event) => {
         all = [...all, ...error.map(v => v.message)]
       }
 
-      if (value && value.trim().length < 1 && required) {
+      if (value.trim().length < 1 && required) {
         all = [...all, `Value of ${key} should not be empty.`]
       }
 
@@ -245,6 +245,12 @@ const onSubmit = async (e: Event) => {
   if (errors.length > 0) {
     // change loading state and return
     loading.value = false
+    // toast error message for authentication failure
+    addToast({
+      variant: 'error',
+      title: 'Authentication Error',
+      description: `They are required fields are have Invalid values or are empty.`
+    })
     return
   }
 
@@ -287,8 +293,7 @@ const onSubmit = async (e: Event) => {
     addToast({
       variant: 'success',
       title: 'Authentication Success',
-      description: 'Signup Successful.',
-      id: ''
+      description: 'Signup Successful.'
     })
 
     // redirect to home
@@ -303,8 +308,7 @@ const onSubmit = async (e: Event) => {
         addToast({
           variant: 'error',
           title: 'Authentication Error',
-          description: 'Something went wrong. Please try again later.',
-          id: ''
+          description: 'Something went wrong. Please try again later.'
         })
         break
 
@@ -313,8 +317,7 @@ const onSubmit = async (e: Event) => {
         addToast({
           variant: 'error',
           title: 'Authentication Error',
-          description: err.message,
-          id: ''
+          description: err.message
         })
         break
     }
